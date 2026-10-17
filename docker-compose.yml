@@ -1,0 +1,71 @@
+version: "3.8"
+
+services:
+  redis:
+    image: redis:7-alpine
+    container_name: string_art_redis
+    restart: unless-stopped
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 3s
+      retries: 5
+
+  api:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: string_art_api
+    restart: unless-stopped
+    environment:
+      - DATA_DIR=/app/data
+      - REDIS_URL=redis://redis:6379/0
+      - CORS_ORIGINS=http://localhost:3000,http://localhost:8080,http://127.0.0.1:3000
+      - TASK_ALWAYS_EAGER=false
+    volumes:
+      - string_art_data:/app/data
+    depends_on:
+      redis:
+        condition: service_healthy
+    ports:
+      - "8000:8000"
+
+  worker:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: string_art_worker
+    restart: unless-stopped
+    command: celery -A app.workers.celery_app.celery_app worker --loglevel=info --concurrency=2
+    environment:
+      - DATA_DIR=/app/data
+      - REDIS_URL=redis://redis:6379/0
+      - CELERY_CONCURRENCY=2
+    volumes:
+      - string_art_data:/app/data
+    depends_on:
+      redis:
+        condition: service_healthy
+      api:
+        condition: service_started
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: string_art_frontend
+    restart: unless-stopped
+    environment:
+      - NEXT_PUBLIC_API_URL=http://localhost:8000
+    ports:
+      - "3000:3000"
+    depends_on:
+      - api
+
+volumes:
+  redis_data:
+  string_art_data:
