@@ -54,17 +54,49 @@ docker compose up --build
 - **Next.js Frontend** على **Vercel**.
 - **Python Backend** على خادم سحابي مستمر مثل **Render.com** أو **Railway.app** أو **VPS**.
 
-### الخطوة 1: نشر الباك إند (على Render كمثال مجاني):
-1. سجل دخول في [Render.com](https://render.com) واضغط **New Web Service**.
-2. اربط مستودع GitHub: `https://github.com/Eman2024956/strings_art.git`.
-3. اضبط الإعدادات التالية:
-   - **Root Directory**: `backend`
-   - **Build Command**: `pip install -r requirements.txt`
-   - **Start Command**: `uvicorn app.main:app --host 0.0.0.0 --port $PORT`
-4. أضف متغير بيئة (Environment Variable):
-   - `TASK_ALWAYS_EAGER` = `true`
-5. احصل على رابط الـ API بعد انتهاء النشر، مثلاً:
-   `https://string-art-api.onrender.com`
+### الخطوة 1: نشر الباك إند على Render (الإعدادات وخيارات الأسعار):
+
+#### أ) جدول خطط وأسعار Render (Pricing Plans):
+تطبيق فن الخيوط يعتمد على معالجة حسابية مكثفة (CPU-heavy):
+
+| الخطة (Plan) | السعر شهرياً | المعالج (CPU) | الذاكرة (RAM) | التوصية والاستخدام |
+|---|---|---|---|---|
+| **Free (مجانية)** | **$0** | 0.5 vCPU | 512 MB | • مناسبة للتجربة الأولية.<br>• تنام الخدمة بعد 15 دقيقة خمول (Cold start 40-50 ثانية).<br>• لا تدعم قرص تخزين دائم. |
+| **Starter** | **$7** | 0.5 vCPU | 512 MB | • تعمل 24/7 دون توقف (Always-on).<br>• ممتازة للبدء والإنتاج الأولي حتى 3000 خط. |
+| **Standard (موصى بها للإنتاج)** | **$25** | 1 vCPU | 2 GB | • **الخيار المثالي للإنتاج الفعلي**.<br>• سرعة مضاعفة في الحساب (3000-8000 خط).<br>• تدعم إضافة قرص تخزين دائم (Persistent Disk). |
+| **Pro** | **$85** | 2 vCPU | 4 GB | • للحمل والضغط العالي واستقبال طلبات توليد متزامنة. |
+
+> 💡 **إضافة قرص تخزين دائم (Persistent Disk)**: $0.25 لكل 1GB شهرياً (مثلاً 5GB تكلف $1.25 شهرياً فقط لحفظ ملفات الـ PDF والـ ZIP بعد إعادة تشغيل السيرفر).
+
+---
+
+#### ب) ضبط حقول الخدمة في صفحة Render (Web Services Fields):
+عند الضغط على **New ➔ Web Service** في [Render.com](https://render.com) واختيار المستودع:
+
+| اسم الحقل في Render | القيمة المطلوبة | ملاحظات |
+|---|---|---|
+| **Name** | `string-art-api` | اسم الخدمة ليكون الرابط: `https://string-art-api.onrender.com` |
+| **Region** | `Frankfurt (EU Central)` أو `Oregon (US)` | اختر الأقرب لجمهورك (فرانكفورت ممتازة للمنطقة العربية). |
+| **Branch** | `main` | الفرع الرئيسي للمستودع. |
+| **Root Directory** | `backend` | **ضروري جداً**: لتحديد مجلد الباك إند. |
+| **Runtime** | `Python 3` | بيئة التشغيل. |
+| **Build Command** | `pip install -r requirements.txt` | تثبيت الاعتماديات (NumPy, Pillow, ReportLab, FastAPI). |
+| **Start Command** | `uvicorn app.main:app --host 0.0.0.0 --port $PORT` | أمر إطلاق خادم الـ API. |
+| **Instance Type** | `Free` أو `Starter ($7)` أو `Standard ($25)` | اختر الخطة المناسبة. |
+
+#### ج) حقول متغيرات البيئة (Environment Variables):
+في نفس الصفحة انزل إلى **Environment Variables** وأضف:
+1. `PYTHON_VERSION` = `3.11.0`
+2. `TASK_ALWAYS_EAGER` = `true`
+3. `CORS_ORIGINS` = `https://your-domain.vercel.app,http://localhost:3000`
+
+#### د) وحدة التخزين الدائم (Disks) - في خطط المدفوعة:
+1. اضغط **Add Disk**.
+2. **Name**: `string_art_storage`
+3. **Mount Path**: `/app/data`
+4. **Size**: `1 GB` (أو أكثر).
+
+بعد انتهاء النشر، انسخ رابط السيرفر (مثال: `https://string-art-api.onrender.com`).
 
 ### الخطوة 2: نشر الواجهة على Vercel:
 1. ادخل إلى [Vercel.com](https://vercel.com) واضغط **Add New Project**.
