@@ -121,8 +121,14 @@ docker compose up --build
    - اترك **Framework Preset** على: `Next.js`.
 4. في قسم **Environment Variables** أضف المتغير:
    - **Key**: `BACKEND_URL`
-   - **Value**: رابط الباك إند من الخطوة السابقة (مثل `https://string-art-api.onrender.com`).
+   - **Value**: رابط الباك إند من الخطوة السابقة **بدون شرطة مائلة في النهاية** (مثل `https://strings-art.onrender.com`).
 5. اضغط **Deploy**.
+
+> ⚠️ **تنبيه حاسم لتجنب خطأ `404 Not Found` (مشكلة الشرطة المائلة `//`):**
+> - **الصحيح ✅**: `https://strings-art.onrender.com`
+> - **الخاطئ ❌**: `https://strings-art.onrender.com/` (مع شرطة مائلة في النهاية).
+> - **السبب**: وضع شرطة مائلة في نهاية القيمة داخل Vercel يجعل خادم Next.js يرسل الطلبات كـ `//health` أو `//api/uploads` مما يجعل خادم Render يرجع خطأ `404 Not Found`.
+> - **التحصين البرمجي**: تم أيضاً تحصين كود `frontend/next.config.mjs` ليقوم تلقائياً بتنظيف أي شرطة مائلة زائدة برمجياً بواسطة `replace(/\/+$/, "")`.
 
 *(يقوم Next.js تلقائياً عبر `next.config.mjs` بإعادة توجيه كافة طلبات `/api/*` إلى خادم الباك إند بسلاسة ودون مشاكل CORS).*
 
