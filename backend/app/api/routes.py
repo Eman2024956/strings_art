@@ -75,15 +75,23 @@ async def upload_image(
 ):
     session_id = get_or_create_session_id(request, response)
     
-    # 1. Content-Type check (reject SVGs, HTML, executables)
+    # 1. Content-Type and extension check (reject SVGs, HTML, executables)
+    filename = (file.filename or "").lower()
+    ext = Path(filename).suffix.lower()
     content_type = file.content_type.lower() if file.content_type else ""
-    if "svg" in content_type or file.filename.lower().endswith(".svg"):
+
+    if "svg" in content_type or ext == ".svg":
         raise HTTPException(status_code=400, detail="SVG uploads are prohibited for security reasons.")
-        
-    if content_type not in ALLOWED_IMAGE_TYPES:
+
+    is_valid_format = (
+        content_type in ALLOWED_IMAGE_TYPES
+        or content_type in ("image/pjpeg", "image/x-png")
+        or ext in (".jpg", ".jpeg", ".png", ".webp")
+    )
+    if not is_valid_format:
         raise HTTPException(
             status_code=400,
-            detail=f"Unsupported format '{content_type}'. Please upload JPG, PNG, or WebP images."
+            detail=f"Unsupported format '{content_type or ext}'. Please upload JPG, PNG, or WebP images."
         )
 
     # 2. Size check
