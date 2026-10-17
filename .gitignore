@@ -38,6 +38,9 @@ backend/data/
 # Node & Next.js
 node_modules/
 frontend/node_modules/
+backend-ts/node_modules/
+backend-ts/dist/
+backend-ts/data/
 frontend/.next/
 .next/
 out/

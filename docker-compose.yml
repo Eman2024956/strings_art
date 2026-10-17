@@ -34,6 +34,21 @@ services:
     ports:
       - "8000:8000"
 
+  api-ts:
+    build:
+      context: ./backend-ts
+      dockerfile: Dockerfile
+    container_name: string_art_api_ts
+    restart: unless-stopped
+    environment:
+      - DATA_DIR=/app/data
+      - CORS_ORIGINS=http://localhost:3000,http://localhost:8080,http://127.0.0.1:3000
+      - PORT=8001
+    volumes:
+      - string_art_data:/app/data
+    ports:
+      - "8001:8001"
+
   worker:
     build:
       context: ./backend

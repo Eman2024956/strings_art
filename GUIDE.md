@@ -1,9 +1,9 @@
 # دليل التشغيل والنشر | String Art Studio Guide
 
-هذا الدليل يوضح:
-1. **الخيار الأول (الأحدث والموصى به لـ Vercel)**: تشغيل التطبيق بالكامل بنسبة 100% على **Vercel** بنظام **All-in-One TypeScript/JS Engine** دون الحاجة إلى Render أو Docker!
-2. **الخيار الثاني (الأصلي)**: تشغيل خادم بايثون المنفصل (**Python FastAPI + Celery + Redis**) محلياً أو عبر Render أو Docker Compose.
-3. خطوات النشر التفصيلية ورفع التحديثات على **GitHub**.
+هذا المشروع يوفر خيارات معمارية متعددة لتناسب كافة الاحتياجات:
+1. **الخيار الأول (الموصى به لـ Vercel)**: تشغيل التطبيق بالكامل بنسبة 100% على **Vercel** بنظام **All-in-One Engine** مدمج داخل `frontend` دون الحاجة إلى Render أو خوادم خارجية.
+2. **الخيار الثاني (الجديد: `backend-ts`)**: خادم منفصل كامل بلغة **TypeScript + Node.js (Express)** داخل مجلد `backend-ts`، فائق السرعة، ومزود بـ Dockerfile و Endpoints مطابقة 100%.
+3. **الخيار الثالث (الأصلي: `backend`)**: خادم بايثون الأصلي المحفوظ بالكامل (**Python FastAPI + Celery + Redis**) للعمليات الحسابية الثقيلة عبر Render أو محلياً.
 
 ---
 
@@ -22,12 +22,41 @@
 
 ---
 
-## 1. التشغيل المحلي (Localhost)
+## ⚡ الخيار الثاني: تشغيل الباك إند الجديد (TypeScript Backend - `backend-ts`)
 
-يتطلب التطبيق تشغيل خادمين معاً:
+تم إنشاء مجلد جديد ومستقل بالكامل باسم `backend-ts` مكتوب بالكامل بـ **TypeScript**:
+- لا يحتاج بايثون أو بيئة افتراضية أو Redis، ويعمل بنظام Node.js السريع.
+- يوفر نفس مسارات الـ API بالكامل (`/health`, `/api/uploads`, `/api/jobs`, `/downloads/`).
 
-### أ) خادم الباك إند (Python FastAPI):
-افتح نافذة طرفية (Terminal 1) في مجلد المشروع الرئيسي:
+### التشغيل المحلي:
+```bash
+cd backend-ts
+npm install
+npm run dev
+```
+> يعمل الخادم افتراضياً على: `http://localhost:8000` (أو يمكنك تحديد `PORT=8001 npm run dev`).
+
+### البناء والتشغيل للإنتاج (Production):
+```bash
+cd backend-ts
+npm run build
+npm start
+```
+
+### التشغيل عبر Docker:
+```bash
+cd backend-ts
+docker build -t string-art-backend-ts .
+docker run -p 8000:8000 string-art-backend-ts
+```
+
+---
+
+## 🐍 الخيار الثالث: تشغيل الباك إند الأصلي (Python FastAPI - `backend`)
+
+الباك إند الأصلي لبايثون محفوظ بالكامل في مجلد `backend`:
+
+### التشغيل المحلي:
 ```bash
 # تفعيل البيئة الافتراضية
 source .venv/bin/activate
@@ -37,8 +66,7 @@ TASK_ALWAYS_EAGER=true uvicorn app.main:app --app-dir backend --port 8000 --relo
 ```
 > يعمل الـ API على: `http://127.0.0.1:8000`
 
-### ب) خادم الواجهة الأمامية (Next.js):
-افتح نافذة طرفية ثانية (Terminal 2):
+### تشغيل الواجهة الأمامية:
 ```bash
 cd frontend
 npm install
@@ -48,16 +76,17 @@ npm run dev
 
 ---
 
-## 2. التشغيل عبر Docker Compose
+## 🐳 التشغيل عبر Docker Compose
 
-لتشغيل المنظومة كاملة بضغطة زر واحدة (Next.js + FastAPI + Celery + Redis):
+لتشغيل المنظومة كاملة بضغطة زر واحدة:
 
 ```bash
-# بناء وتشغيل الحاويات
+# تشغيل كل الخدمات (بايثون + تايب سكريبت + واجهة + رديس):
 docker compose up --build
 ```
 - **الواجهة**: `http://localhost:3000`
-- **الـ API**: `http://localhost:8000`
+- **الـ Python API**: `http://localhost:8000`
+- **الـ TypeScript API**: `http://localhost:8001`
 - **التخزين الدائم**: مجلد `string_art_data` لحفظ الصور وقوالب الطباعة.
 
 ---
