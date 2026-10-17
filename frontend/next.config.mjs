@@ -12,7 +12,11 @@ const nextConfig = {
     },
   },
   async rewrites() {
-    const rawBackendUrl = process.env.BACKEND_URL || "http://127.0.0.1:8000";
+    const rawBackendUrl = process.env.BACKEND_URL;
+    if (!rawBackendUrl) {
+      // No external backend URL provided: use native Next.js TypeScript/JS API routes!
+      return [];
+    }
     const backendUrl = rawBackendUrl.replace(/\/+$/, "");
     return [
       {
