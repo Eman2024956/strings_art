@@ -12,7 +12,8 @@ const nextConfig = {
     },
   },
   async rewrites() {
-    const backendUrl = process.env.BACKEND_URL || "http://127.0.0.1:8000";
+    const rawBackendUrl = process.env.BACKEND_URL || "http://127.0.0.1:8000";
+    const backendUrl = rawBackendUrl.replace(/\/+$/, "");
     return [
       {
         source: "/api/:path*",

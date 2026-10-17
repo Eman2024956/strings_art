@@ -37,4 +37,13 @@ async def global_exception_handler(request: Request, exc: Exception):
         content={"detail": "An internal server error occurred. Please try again later."}
     )
 
+@app.get("/")
+@app.head("/")
+def root_status():
+    return {
+        "status": "ok",
+        "app": "String Art Generator API",
+        "endpoints": ["/health", "/api/uploads", "/api/jobs"]
+    }
+
 app.include_router(router)
