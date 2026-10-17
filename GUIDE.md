@@ -108,12 +108,25 @@ git remote add origin https://github.com/Eman2024956/strings_art.git
 git push -u origin main
 ```
 
-> **ملاحظة**: إذا كان المستودع على GitHub يحتوي مسبقاً على ملفات (مثل README أولي)، يمكنك استخدام:
-> ```bash
-> git pull origin main --rebase
-> git push -u origin main
-> ```
-> أو للرفع القسري إذا كنت تريد استبدال محتويات المستودع بالكامل:
-> ```bash
-> git push -u origin main --force
-> ```
+### حل مشكلة الصلاحيات وتوثيق الحساب (GitHub 403 Permission Denied):
+إذا واجهت خطأ 403 أو رغبت في الرفع عبر Personal Access Token:
+
+1. **إنشاء Token بصلاحيات الرفع (Classic Token - الأفضل)**:
+   - افتح: [https://github.com/settings/tokens](https://github.com/settings/tokens)
+   - اضغط **Generate new token (classic)**.
+   - ضع علامة صح (✓) على خيار **`repo`** (Full control of private and public repositories).
+   - اضغط **Generate token** وانسخ الرمز الذي يبدأ بـ `ghp_...`.
+
+2. **الرفع باستخدام الـ Token مباشرة**:
+   ```bash
+   git push https://<YOUR_TOKEN>@github.com/Eman2024956/strings_art.git main
+   ```
+   أو حفظ الـ Token للمستودع:
+   ```bash
+   git remote set-url origin https://Eman2024956:<YOUR_TOKEN>@github.com/Eman2024956/strings_art.git
+   git push -u origin main
+   ```
+
+3. **في حال استخدام Fine-Grained Token (`github_pat_...`)**:
+   - تأكد من الدخول لصفحة التوكن وتعديل **Repository permissions**.
+   - تغيير صلاحية **Contents** من `No access` إلى **`Read and write`**، حيث أن صلاحية `metadata=read` وحدها لا تسمح بالرفع.
