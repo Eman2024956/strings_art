@@ -9,8 +9,7 @@
 
 ## 🚀 النشر الرسمي الموحد على Vercel:
 
-- 🌐 **الرابط المباشر العام**: [https://strings-art-studio.vercel.app](https://strings-art-studio.vercel.app)
-- 🌐 **النطاقات المرتبطة**: [https://strings-art.vercel.app](https://strings-art.vercel.app) & [https://art4strings.vercel.app](https://art4strings.vercel.app)
+- 🌐 **رابط الموقع الرسمي والوحيد على Vercel**: [https://strings-art-studio.vercel.app](https://strings-art-studio.vercel.app)
 
 يتم النشر تلقائياً من المجلد الرئيسي للمشروع عبر Workspaces وبناء Next.js المحسّن بـ Turbopack.
 
