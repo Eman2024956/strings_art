@@ -12,8 +12,40 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata = {
+  metadataBase: new URL("https://strings-art-studio.vercel.app"),
   title: "استوديو فن الخيوط والمسامير | String Art Studio",
   description: "حوّل صورك إلى تصاميم فن الخيوط والمسامير الواقعية بخيط واحد مستمر، مع قوالب طباعة بمقاسات حقيقية ومشغل تفاعلي لخطوات التنفيذ.",
+  icons: {
+    icon: [
+      { url: "/favicon.ico", sizes: "any" },
+      { url: "/icon.png", type: "image/png", sizes: "512x512" },
+    ],
+    apple: [
+      { url: "/apple-icon.png", sizes: "180x180", type: "image/png" },
+    ],
+  },
+  openGraph: {
+    title: "استوديو فن الخيوط والمسامير | String Art Studio",
+    description: "حوّل صورك إلى لوحات فن الخيوط والمسامير الواقعية بخيط واحد مستمر، مع قوالب طباعة بمقاسات حقيقية 1:1 وقوالب مقسمة A4 ومشغل خطوات تفاعلي.",
+    url: "https://strings-art-studio.vercel.app",
+    siteName: "String Art Studio",
+    locale: "ar_AR",
+    type: "website",
+    images: [
+      {
+        url: "/og-image.png",
+        width: 1200,
+        height: 630,
+        alt: "استوديو فن الخيوط والمسامير | String Art Studio",
+      },
+    ],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "استوديو فن الخيوط والمسامير | String Art Studio",
+    description: "حوّل صورك إلى تصاميم فن الخيوط والمسامير الواقعية بخيط واحد مستمر، مع قوالب طباعة بمقاسات حقيقية 1:1 ومشغل تفاعلي.",
+    images: ["/og-image.png"],
+  },
 };
 
 export default function RootLayout({ children }) {
