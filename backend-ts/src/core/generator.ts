@@ -9,6 +9,7 @@ export interface GeneratorOptions {
   strength: number; // Line opacity weight (0.02 to 0.3)
   minGap: number;
   startNail: number; // 1-indexed
+  importance?: Float32Array; // Soft facial importance map
   onProgress?: (step: number, totalSteps: number, currentNail: number) => void;
   isCancelled?: () => boolean;
 }
@@ -22,6 +23,7 @@ export function runStringArtGenerator(options: GeneratorOptions): GeneratorOutpu
     strength,
     minGap,
     startNail,
+    importance,
     onProgress,
     isCancelled,
   } = options;
@@ -39,6 +41,9 @@ export function runStringArtGenerator(options: GeneratorOptions): GeneratorOutpu
   // Current canvas darkness (starts at 0 = pure white background)
   const currentDarkness = new Float32Array(totalPixels);
 
+  // Working error map (starts with required darkness target)
+  const errorMap = new Float32Array(darknessTarget);
+
   // Precompute pin positions & line lookup
   const nailsPx = calculateNailPositions(nails, size);
   const lineLookup = precomputeLineLookup(nails, size, nailsPx);
@@ -46,15 +51,19 @@ export function runStringArtGenerator(options: GeneratorOptions): GeneratorOutpu
   // Sequence of pins (1-indexed)
   let currentPin = (startNail - 1 + nails) % nails;
   const sequence: number[] = [currentPin + 1];
+  let previous = -1;
+
+  // Track chord usage frequency to prevent repeated parallel bands
+  const chordUsage = new Uint8Array(nails * nails);
 
   // Weight added per line stroke in darkness (0..255 scale)
   const lineWeight = Math.max(1.0, Math.min(255.0, strength * 255.0));
 
   let stoppingReason = "completed";
 
-  // Cache recent pins to avoid retracing identical line back and forth immediately
+  // Cache recent pins to avoid retracing
   const recentPins: number[] = [];
-  const MAX_RECENT = 12;
+  const MAX_RECENT = Math.max(15, Math.floor(nails * 0.08));
 
   for (let step = 0; step < steps; step++) {
     if (isCancelled && isCancelled()) {
@@ -67,7 +76,7 @@ export function runStringArtGenerator(options: GeneratorOptions): GeneratorOutpu
     let bestLine: Int32Array | null = null;
 
     for (let candidate = 0; candidate < nails; candidate++) {
-      if (candidate === currentPin) continue;
+      if (candidate === currentPin || candidate === previous || recentPins.includes(candidate)) continue;
 
       // Check min gap condition
       const dist = Math.min(
@@ -76,25 +85,33 @@ export function runStringArtGenerator(options: GeneratorOptions): GeneratorOutpu
       );
       if (dist < minGap) continue;
 
-      // Avoid immediate back-to-back retracing
-      if (recentPins.length > 0 && recentPins[recentPins.length - 1] === candidate) {
-        continue;
-      }
-
       const line = getLineFromLookup(lineLookup, nails, currentPin, candidate);
       if (!line || line.length === 0) continue;
 
-      // Evaluate score: how much darkness error this line covers
+      // Importance-weighted residual scoring (prioritizes eyes, nose, mouth)
       let sumScore = 0;
       const len = line.length;
       for (let k = 0; k < len; k++) {
         const idx = line[k];
-        const remainingError = darknessTarget[idx] - currentDarkness[idx];
-        sumScore += remainingError;
+        const res = darknessTarget[idx] - currentDarkness[idx];
+        const imp = importance ? importance[idx] : 1.0;
+        if (res > 0) {
+          sumScore += res * imp;
+        } else {
+          // Strong penalty for crossing bright areas to prevent ghost lines
+          sumScore += res * 0.85 * imp;
+        }
       }
 
-      // Average reduction per pixel
-      const avgScore = sumScore / len;
+      let avgScore = sumScore / Math.pow(len, 0.75);
+
+      // Chord connection frequency penalty (prevents repeated parallel line bands)
+      const chordKey = currentPin < candidate ? currentPin * nails + candidate : candidate * nails + currentPin;
+      const usage = chordUsage[chordKey];
+      if (usage > 0) {
+        avgScore *= Math.pow(0.50, usage);
+      }
+
       if (avgScore > maxScore) {
         maxScore = avgScore;
         bestPin = candidate;
@@ -102,25 +119,32 @@ export function runStringArtGenerator(options: GeneratorOptions): GeneratorOutpu
       }
     }
 
-    // Stop if no positive contribution can be made
-    if (bestPin === -1 || maxScore <= 0 || !bestLine) {
-      stoppingReason = "converged_early";
+    // Stop if no candidate line found, or if error is fully satisfied
+    if (bestPin === -1 || !bestLine || (maxScore < -0.10 * 255.0 && step >= Math.min(2000, Math.floor(steps * 0.85)))) {
+      stoppingReason = bestPin === -1 ? "no_valid_line" : "converged";
       break;
     }
 
-    // Apply the line to canvas
+    // Apply the line to canvas & error map
     for (let k = 0; k < bestLine.length; k++) {
       const idx = bestLine[k];
-      currentDarkness[idx] += lineWeight;
+      errorMap[idx] = Math.max(0.0, errorMap[idx] - lineWeight);
+      currentDarkness[idx] = Math.min(255.0, currentDarkness[idx] + lineWeight);
     }
 
+    // Record chord usage
+    const usedKey = currentPin < bestPin ? currentPin * nails + bestPin : bestPin * nails + currentPin;
+    chordUsage[usedKey]++;
+
+    previous = currentPin;
     currentPin = bestPin;
     sequence.push(currentPin + 1);
 
-    recentPins.push(currentPin);
+    recentPins.push(previous);
     if (recentPins.length > MAX_RECENT) {
       recentPins.shift();
     }
+
 
     if (onProgress && (step % 50 === 0 || step === steps - 1)) {
       onProgress(step + 1, steps, currentPin + 1);

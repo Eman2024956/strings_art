@@ -30,7 +30,7 @@ async function executeJob(jobId: string): Promise<void> {
     const config = job.config;
 
     // 1. Process image
-    const { rawGrayscale, targetPngBuffer } = await processInputImage(upload.file_path, {
+    const { rawGrayscale, targetPngBuffer, importance } = await processInputImage(upload.file_path, {
       size: config.size,
       cropBox: config.crop_box,
       rotation: config.rotation,
@@ -49,6 +49,7 @@ async function executeJob(jobId: string): Promise<void> {
       strength: config.strength,
       minGap: config.min_gap,
       startNail: config.start_nail,
+      importance,
       onProgress: (step, total, nail) => {
         Store.updateJobProgress(jobId, step, total, nail);
       },
@@ -124,6 +125,7 @@ async function executeJob(jobId: string): Promise<void> {
       start_nail: config.start_nail,
       sequence,
       nails_px: nailsPx,
+      size: config.size,
       artifacts: artifactsMap,
     };
 

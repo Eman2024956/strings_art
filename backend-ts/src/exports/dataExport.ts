@@ -9,6 +9,11 @@ export function generateCsv(sequence: number[]): string {
   return csv;
 }
 
+export function generateTxtInstructions(result: JobResult): string {
+  const sequence = result.sequence || [];
+  return sequence.join(", ");
+}
+
 export function generateInstructionsJson(result: JobResult): string {
   return JSON.stringify(result, null, 2);
 }

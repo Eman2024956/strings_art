@@ -7,8 +7,10 @@ export default function ProgressModal({
   jobStatus,
   onCancel,
   isCancelling,
+  isAuto = false,
   t,
 }) {
+  if (isAuto) return null;
   if (!jobStatus || (jobStatus.status !== "queued" && jobStatus.status !== "running" && jobStatus.status !== "cancelling")) {
     return null;
   }
@@ -41,11 +43,11 @@ export default function ProgressModal({
 
         {/* Real Progress Bar */}
         <div className="space-y-2">
-          <div className="flex justify-between text-xs font-mono font-semibold text-neutral-600 dark:text-neutral-300">
+          <div className="flex justify-between text-sm font-mono font-black text-neutral-800 dark:text-neutral-100">
             <span>
-              {progressStep} / {totalSteps} lines
+              <span className="font-black text-indigo-600 dark:text-indigo-400">{progressStep}</span> / <span className="font-black">{totalSteps}</span> lines
             </span>
-            <span>{pct}%</span>
+            <span className="font-black text-rose-600 dark:text-rose-400">{pct}%</span>
           </div>
           <div className="w-full h-3 bg-neutral-100 dark:bg-neutral-800 rounded-full overflow-hidden p-0.5 border border-neutral-200 dark:border-neutral-700">
             <div
@@ -54,8 +56,8 @@ export default function ProgressModal({
             />
           </div>
           {jobStatus.current_nail && (
-            <p className="text-[11px] text-neutral-400 font-mono">
-              Active Nail: #{jobStatus.current_nail}
+            <p className="text-xs text-neutral-500 dark:text-neutral-400 font-mono font-bold">
+              Active Nail: <span className="font-black text-rose-600 dark:text-rose-400">#{jobStatus.current_nail}</span>
             </p>
           )}
         </div>

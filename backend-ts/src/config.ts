@@ -12,10 +12,10 @@ export const MAX_PIXELS = 100_000_000; // 100 Megapixels
 export const ALLOWED_IMAGE_TYPES = ["image/jpeg", "image/png", "image/webp", "image/pjpeg", "image/x-png"];
 
 export const DEFAULT_NAILS = 200;
-export const DEFAULT_STEPS = 2500;
+export const DEFAULT_STEPS = 2200;
 export const DEFAULT_DIAMETER_MM = 400.0;
-export const DEFAULT_STRENGTH = 0.12;
-export const DEFAULT_MIN_GAP = 10;
+export const DEFAULT_STRENGTH = 0.08;
+export const DEFAULT_MIN_GAP = 20;
 export const DEFAULT_SIZE = 300;
 export const DEFAULT_ALLOWANCE_PCT = 15.0;
 

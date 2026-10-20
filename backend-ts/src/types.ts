@@ -42,6 +42,7 @@ export interface JobResult {
   start_nail: number;
   sequence: number[];
   nails_px: Array<[number, number]>;
+  size?: number;
   artifacts: Record<string, string>;
 }
 

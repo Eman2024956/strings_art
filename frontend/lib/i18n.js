@@ -7,13 +7,13 @@ export const translations = {
     step2_adjust: "٢. القص والضبط",
     step3_parameters: "٣. خيارات التوليد",
     step4_generate: "٤. التوليد والمشاهدة",
-    
+
     // Upload
     dragDropText: "اسحب الصورة وأفلتها هنا، أو اضغط للاختيار",
     supportedFormats: "يدعم JPG، PNG، WebP (حتى 15 ميجابايت)",
     uploading: "جاري رفع الصورة والتحقق...",
     changeImage: "تغيير الصورة",
-    
+
     // Adjustments
     adjustTitle: "القص الدائري وتعديل التباين",
     adjustDesc: "قم بتحريك وتكبير وتدوير الصورة لتتوسط الوجه داخل الدائرة، ثم اضبط التباين للحصول على أفضل خطوط.",
@@ -23,14 +23,23 @@ export const translations = {
     contrast: "التباين",
     rotate90: "تدوير 90°",
     resetAdjust: "إعادة ضبط",
-    
+    panHint: "اسحب بالفأرة أو بإصبعك لتحريك الصورة في كل الاتجاهات (يمين، يسار، أعلى، أسفل). على الموبايل يمكنك التقريب بإصبعين (Pinch).",
+    positionControls: "تحريك الصورة (نمط الهاتف الذكي)",
+    moveUp: "تحريك لأعلى",
+    moveDown: "تحريك لأسفل",
+    moveLeft: "تحريك لليسار",
+    moveRight: "تحريك لليمين",
+    centerPosition: "توسيط الإزاحة",
+    positionOffset: "الإزاحة",
+    touchGestureTip: "إيماءات اللمس: اسحب بإصبع للتحريك، أو استخدم إصبعين للتكبير والتصغير",
+
     // Presets
     presetTitle: "الإعدادات الجاهزة",
     presetFast: "معاينة سريعة (100 مسمار، 800 خط)",
     presetBalanced: "متوازن وموصى به (200 مسمار، 3000 خط)",
     presetMasterpiece: "لوحة فائقة الدقة (280 مسمار، 4500 خط)",
     presetCustom: "مخصص",
-    
+
     // Parameters
     paramTitle: "إعدادات الخوارزمية واللوحة",
     nails: "عدد المسامير",
@@ -49,7 +58,39 @@ export const translations = {
     allowancePct: "نسبة الخيط الاحتياطي (%)",
     allowanceHelp: "تغطية التفاف الخيط حول المسامير والعقد وبداية ونهاية العمل (افتراضي 15%)",
     generateButton: "بدء توليد فن الخيوط",
-    
+    autoRegen: "توليد تلقائي فوري",
+    autoRegenDesc: "إعادة بناء لوحة الخيوط تلقائياً بسرعة فائقة عند تحريك أي مؤشر",
+    autoGeneratingStatus: "جاري التحديث التلقائي الفوري...",
+
+    // Auto-Test Parameter Explorer
+    autoTestTitle: "مستكشف المعاملات التلقائي (Auto-Tune Runner)",
+    autoTestDesc: "تجربة تلقائية متسلسلة لعدة تركيبات من المعاملات مع مهلة عرض. اضغط إيقاف عند ظهور أفضل نتيجة لتثبيتها فوراً.",
+    autoTestStart: "بدء الفحص التلقائي",
+    autoTestStop: "إيقاف وتثبيت هذه النتيجة",
+    autoTestPause: "إيقاف مؤقت",
+    autoTestResume: "استئناف الفحص",
+    autoTestNext: "التركيبة التالية",
+    autoTestPrev: "التركيبة السابقة",
+    autoTestDelay: "زمن العرض (ثوانٍ)",
+    autoTestCurrent: "التجربة النشطة",
+    autoTestLockedNotice: "تم تثبيت هذه الإعدادات بنجاح!",
+    autoTestProfileFace: "تركيز ملامح الوجه",
+    autoTestProfileFull: "مسح شامل للإعدادات",
+    autoTestDownloadCsv: "تحميل سجل المعاملات (CSV)",
+    autoTestRecordsCount: "عدد التجارب المسجلة:",
+    autoTestResolutionScore: "درجة دقة الوضوح:",
+    autoTestCompRes: "دقة المعالجة الحسابية",
+    autoTestCompResFilter: "تصفية دقة المعالجة الحسابية:",
+    autoTestResAll: "الكل (300px & 400px)",
+    autoTestRes300: "300 px فقط",
+    autoTestRes400: "400 px فقط",
+    autoTestSaveNow: "حفظ السجل وتنزيله (CSV)",
+    autoTestGridDim: "شبكة الحساب:",
+    autoTestSweetSpotToggle: "إيقاف ذكي عند النطاق الذهبي (56% – 65%)",
+    autoTestSweetSpotDesc: "إيقاف الفحص وتثبيت المعاملات وحفظ سجل CSV تلقائياً فور الوصول لدرجة تطابق بين 56% و 65%",
+    autoTestSweetSpotMatched: "🎉 تم الوصول للدقة المثالية بنجاح وتثبيت المعاملات تلقائياً وحفظ ملف CSV!",
+    autoTestSweetSpotTarget: "النطاق المثالي: 56% – 65%",
+
     // Generating
     generatingTitle: "جاري الحساب الهندسي للخيوط...",
     currentStep: "الخطوة الحالية",
@@ -57,7 +98,7 @@ export const translations = {
     cancelJob: "إلغاء العملية",
     cancelling: "جاري الإلغاء...",
     cancelledNotice: "تم إلغاء التوليد بناءً على طلبك.",
-    
+
     // View modes
     viewMode: "وضع العرض",
     viewStringArt: "فن الخيوط",
@@ -69,7 +110,7 @@ export const translations = {
     zoomIn: "تكبير",
     zoomOut: "تصغير",
     fitScreen: "ملاءمة الشاشة",
-    
+
     // Player
     playerTitle: "مشغل خطوات البناء والتنفيذ",
     play: "تشغيل",
@@ -81,7 +122,7 @@ export const translations = {
     speed: "السرعة",
     stepIndicator: "الخطوة {step} من {total}: المسمار {from} ➔ المسمار {to}",
     savedProgress: "تم حفظ تقدمك تلقائياً محلياً على هذا الجهاز.",
-    
+
     // Exports
     exportTitle: "تحميل ملفات التنفيذ والطباعة",
     printWarning: "هام: اطبع القوالب بنسبة 100% / الحجم الفعلي (Actual Size) دون تصغير، وتأكد باستخدام مسطرة القياس (10 سم).",
@@ -91,21 +132,140 @@ export const translations = {
     downloadPdfActual: "قالب بالحجم الفعلي 1:1 (PDF)",
     downloadPdfTiled: "قالب مجزأ لصفحات A4 مع مسطرة القياس (PDF)",
     downloadCsv: "تسلسل الخطوات (CSV للإكسل)",
+    downloadTxt: "تسلسل الخيوط مع التاريخ والوقت (TXT)",
     downloadJson: "بيانات التعليمات (JSON)",
     statsLines: "إجمالي الخطوط المنفذة",
     statsLengthRaw: "طول الخيط الهندسي",
     statsLengthAllowance: "طول الخيط مع الاحتياطي",
     stoppingReason: "سبب اكتمال المعالجة",
-    
+    startNewArtwork: "بدء لوحة جديدة (مسح الذاكرة)",
+    clearCacheTooltip: "مسح اللوحة الحالية وذاكرة التخزين المؤقت لرفع صورة جديدة",
+    clearedNotice: "تم مسح اللوحة والذاكرة المؤقتة بنجاح، يمكنك الآن اختيار صورة جديدة.",
+
     // Stopping reasons
     reason_max_steps_reached: "تم الوصول للحد الأقصى للخطوط المطلوبة",
     reason_no_improvement: "لا يوجد خط إضافي يحسن التباين (اكتملت التفاصيل)",
     reason_cancelled: "تم الإلغاء بواسطة المستخدم",
-    
+
     // Algorithm note
     algoNoteTitle: "كيف تعمل خوارزمية فن الخيوط؟",
     algoNoteText: "تبدأ الخوارزمية من خلفية بيضاء وتقيس في كل خطوة كل المسارات المتاحة من المسمار الحالي، وتختار المسار الذي يقلل مجموع مربعات الخطأ مع الصورة المرجعية مع مراعاة تشبع السواد. هذا بحث تقريبي (Greedy) ذكي وسريع لتكوين الصورة بخيط واحد متصل.",
-    
+
+    // Text file upload and preview
+    tabUploadImage: "توليد من صورة",
+    tabUploadText: "معاينة من ملف نصي (TXT)",
+    uploadTextTitle: "رفع ملف تسلسل الخيوط والمسامير",
+    uploadTextDesc: "قم برفع ملف نصي يحتوي على أرقام المسامير لمعاينة اللوحة النهائية فوراً وتشغيل مشغل الخطوات التفاعلي.",
+    dragDropTextFile: "اسحب ملف النص وأفلته هنا، أو اضغط للاختيار",
+    supportedTextFormats: "يدعم TXT، CSV، JSON (أرقام مسامير متسلسلة)",
+    orPasteSequence: "أو الصق تسلسل أرقام المسامير مباشرة",
+    pastePlaceholder: "مثال: 1, 190, 24, 188, 5, 201... أو 1 -> 190 -> 24 أو أرقام سطرية",
+    previewButton: "معاينة فن الخيوط",
+    sampleButton: "تجربة تسلسل عينة هندسية",
+    parsingFile: "جاري تحليل الملف والتحقق من التسلسل...",
+    detectedSteps: "عدد الخطوات (الخيوط)",
+    detectedNails: "عدد المسامير على الدائرة",
+    boardDiameter: "قطر اللوحة (مم)",
+    allowancePct: "نسبة الاحتياطي (%)",
+    importedBadge: "تسلسل مستورد",
+    importedSequenceDesc: "تم تحميل هذا العمل من ملف نصي مسبق الصنع. يمكنك معاينة النتيجة، استخدام المشغل، وتنزيل القوالب.",
+    reason_uploaded_sequence: "تسلسل مكتمل تم استيراده من ملف نصي",
+    overrideNailsTitle: "تعديل عدد المسامير",
+    recalculatePreview: "تحديث المعاينة",
+    fileUploadedSuccess: "تم قراءة التسلسل بنجاح",
+
+    // Welcome Hero
+    heroBadge: "الجيل الأحدث لفن الخيوط • بغداد 2026",
+    heroTitle: "استوديو فن الخيوط والمسامير الحديث",
+    heroSubtitle: "حوّل صورك وتصميماتك إلى لوحات واقعية آسرة باستخدام خيط فيزيائي واحد متصل ومسامير مرقمة بدقة هندسية متناهية.",
+    heroCtaLaunch: "إطلاق الاستوديو وبدء العمل",
+    heroCtaUploadPhoto: "توليد من صورة",
+    heroCtaUploadText: "معاينة من ملف نصي (TXT)",
+    heroStat1Val: "100%",
+    heroStat1Label: "خيط فيزيائي واحد متصل",
+    heroStat2Val: "400+",
+    heroStat2Label: "أقصى دقة للمسامير",
+    heroStat3Val: "1:1",
+    heroStat3Label: "قوالب طباعة بمقاس حقيقي",
+    heroStat4Val: "2026",
+    heroStat4Label: "العراق - بغداد",
+
+    // Navigation
+    navHome: "الرئيسية",
+    navStudio: "استوديو العمل",
+    navTextPreview: "معاينة ملف نصي (TXT)",
+    navServices: "خدماتنا ومميزاتنا",
+    navHowItWorks: "كيف تعمل؟",
+    launchButton: "إطلاق الاستوديو",
+    headerUploadTextBtn: "معاينة من ملف نصي",
+
+    // Text Preview Service Page
+    textServiceTitle: "خدمة معاينة فن الخيوط من ملف تسلسل نصي",
+    textServiceSubtitle: "ارفع أو الصق أرقام مسامير فن الخيوط (TXT / CSV / JSON) لمعاينة اللوحة التفاعلية فورياً، وتدقيق مسار الخيوط وخطوات التنفيذ.",
+    backToStudio: "العودة إلى الاستوديو الكامل",
+    loadInMainStudio: "فتح في استوديو العمل الكامل",
+
+    // Services Section
+    servicesSectionTitle: "خدمات الاستوديو والمميزات الفنية",
+    servicesSectionSubtitle: "مجموعة متكاملة من الأدوات البرمجية والهندسية لتجهيز وتنفيذ لوحات فن الخيوط من الشاشة إلى الجدار.",
+    service1Title: "توليد الخيوط الذكي فائق الدقة",
+    service1Desc: "خوارزمية ذكية تحسب أفضل المسارات لإنشاء تباين واقعي ومطابق لتفاصيل ملامح الوجه والظلال باستخدام خيط واحد.",
+    service2Title: "معاينة واستيراد ملفات التسلسل (TXT / CSV / JSON)",
+    service2Desc: "ارفع أو الصق أرقام المسامير من أي برنامج أو ملف سابق لمعاينة شكل اللوحة فورياً وتدقيق مسار الخيوط.",
+    service3Title: "مشغل البناء التفاعلي المباشر (Step Player)",
+    service3Desc: "مساعد تفاعلي لتسهيل الشغل اليدوي، يوضح لك المسمار الحالي والمسمار القادم خطوة بخطوة مع مؤقت وحفظ تلقائي.",
+    service4Title: "قوالب طباعة هندسية 1:1 و A4 مجزأة",
+    service4Desc: "تصدير مخططات حقيقية جاهزة للطباعة على طابعات A4 المنزلية أو طابعات البلوتر الكبيرة مع مسطرة معايرة 10 سم.",
+    service5Title: "حساب أطوال الخيوط واحتياطي الشد",
+    service5Desc: "حساب رياضي دقيق لطول الخيط المطلوب بالأمتار مع إضافة 15% نسبة أمان للعقد والالتفاف حول المسامير.",
+    service6Title: "حزمة تصدير الإنتاج الشاملة (ZIP Bundle)",
+    service6Desc: "تحميل ملفات SVG فيكتورية، PDF للطباعة، جداول CSV، ملفات TXT، وبيانات JSON بنقرة واحدة.",
+
+    // How It Works Section
+    howTitle: "كيف تصنع لوحة فن الخيوط الخاصة بك في 4 خطوات؟",
+    howSubtitle: "خطوات بسيطة تنقلك من مجرد صورة عادية إلى تحفة فنية تزين منزلك أو معرضك.",
+    how1Title: "١. اختيار الصورة أو ملف التسلسل",
+    how1Desc: "ارفع صورتك الشخصية أو ملف تسلسل أرقام المسامير الجاهز بصيغة TXT أو CSV.",
+    how2Title: "٢. ضبط المركز والتباين",
+    how2Desc: "حدد قطر اللوحة الدائرية، اضبط الإضاءة والتباين، وحدد عدد المسامير المناسب لعملك.",
+    how3Title: "٣. الحساب الهندسي والمعاينة",
+    how3Desc: "تقوم الخوارزمية بحساب آلاف الخطوط في ثوانٍ، لتظهر لك المعاينة الرقمية التفاعلية.",
+    how4Title: "٤. الطباعة والبدء بلف الخيط",
+    how4Desc: "اطبع قالب المسامير، ثبته على لوح الخشب، وابدأ تمرير الخيط مستعيناً بمشغل الخطوات.",
+
+    // Footer
+    footerBrandDesc: "المنصة الرائدة في تحويل الصور الرقمية إلى فن خيوط فيزيائي واقعي بقوالب هندسية جاهزة للورش والتنفيذ المباشر.",
+    footerServicesTitle: "الخدمات والحلول",
+    footerQuickLinksTitle: "روابط سريعة",
+    footerFormatsTitle: "الصيغ المدعومة",
+    footerLocationBadge: "صُنعت بحرفية وإتقان في جمهورية العراق - بغداد",
+    footerCopyright: "جميع الحقوق محفوظة © العراق - بغداد 2026",
+    footerAllRightsReserved: "جميع الحقوق محفوظة © العراق - بغداد 2026 | String Art Studio",
+
+    // Bottom Navigation & Menu App Bar
+    bottomNavStudio: "الاستوديو",
+    bottomNavText: "ملف نصي",
+    bottomNavServices: "المميزات",
+    bottomNavMenu: "القائمة",
+    bottomNavActionUpload: "رفع صورة",
+    bottomNavActionGenerate: "توليد",
+    bottomNavActionPlay: "المشغل",
+    bottomNavActionStart: "ابدأ العمل",
+    menuTitle: "قائمة الاستوديو والخيارات",
+    menuSubtitle: "التحكم السريع، التنقل، وإعدادات العرض",
+    menuClose: "إغلاق",
+    menuNavigation: "التنقل السريع",
+    menuPreferences: "المظهر واللغة",
+    menuActions: "إجراءات العمل",
+    menuExports: "تحميل ملفات الطباعة والإنتاج",
+    menuExportsDesc: "تصدير قوالب PDF الفائقة، ملفات SVG، وتسلسل الخيوط",
+    menuStudioDesc: "القص الدائري، ضبط الإضاءة، ومعايرة المسامير",
+    menuTextDesc: "رفع أرقام المسامير من ملف نصي ومعاينتها مباشرة",
+    menuServicesDesc: "استكشف خدمات الاستوديو وحزم التصدير المتاحة",
+    menuHowDesc: "تعرف على خطوات تصنيع اللوحة بالخيط والمسامير",
+    menuStatusOnline: "الخادم متصل وجاهز للعمل",
+    menuStatusOffline: "الخادم غير متصل حالياً",
+
     // Theme
     themeDark: "الوضع الليلي",
     themeLight: "الوضع النهاري",
@@ -119,13 +279,13 @@ export const translations = {
     step2_adjust: "2. Crop & Adjust",
     step3_parameters: "3. Settings",
     step4_generate: "4. Generate & Preview",
-    
+
     // Upload
     dragDropText: "Drag and drop your image here, or click to browse",
     supportedFormats: "Supports JPG, PNG, WebP (up to 15 MB)",
     uploading: "Uploading and validating...",
     changeImage: "Change Photo",
-    
+
     // Adjustments
     adjustTitle: "Circular Crop & Tonal Adjustments",
     adjustDesc: "Pan, zoom, and rotate so the subject is centered in the circle, then tune contrast for crisp thread lines.",
@@ -135,14 +295,23 @@ export const translations = {
     contrast: "Contrast",
     rotate90: "Rotate 90°",
     resetAdjust: "Reset",
-    
+    panHint: "Drag with mouse or finger to move image (left, right, up, down). On mobile, pinch with two fingers to zoom.",
+    positionControls: "Move Image (Mobile Style Controls)",
+    moveUp: "Move Up",
+    moveDown: "Move Down",
+    moveLeft: "Move Left",
+    moveRight: "Move Right",
+    centerPosition: "Center Position",
+    positionOffset: "Offset",
+    touchGestureTip: "Touch Gestures: Drag 1 finger to pan, pinch 2 fingers to zoom",
+
     // Presets
     presetTitle: "Quality Presets",
     presetFast: "Fast Draft (100 nails, 800 lines)",
     presetBalanced: "Balanced Studio (200 nails, 3000 lines)",
     presetMasterpiece: "Masterpiece HD (280 nails, 4500 lines)",
     presetCustom: "Custom",
-    
+
     // Parameters
     paramTitle: "Algorithm & Board Settings",
     nails: "Nail Count",
@@ -161,7 +330,39 @@ export const translations = {
     allowancePct: "Thread Reserve Allowance (%)",
     allowanceHelp: "Covers nail wraps, starting knots, and slack (default 15%)",
     generateButton: "Generate String Art",
-    
+    autoRegen: "Instant Auto-Regenerate",
+    autoRegenDesc: "Automatically rebuild string art chords in real-time when sliders change",
+    autoGeneratingStatus: "Fast Auto-Rebuilding...",
+
+    // Auto-Test Parameter Explorer
+    autoTestTitle: "Auto-Test Parameter Explorer",
+    autoTestDesc: "Automatically cycle through parameter combinations with delay. Click Stop when you see the best result to lock it in.",
+    autoTestStart: "Start Auto-Test",
+    autoTestStop: "Stop & Lock Current Result",
+    autoTestPause: "Pause",
+    autoTestResume: "Resume",
+    autoTestNext: "Next Config",
+    autoTestPrev: "Previous Config",
+    autoTestDelay: "Delay (seconds)",
+    autoTestCurrent: "Active Test",
+    autoTestLockedNotice: "Parameters locked successfully!",
+    autoTestProfileFace: "Facial Details Focus",
+    autoTestProfileFull: "Full Range Sweep",
+    autoTestDownloadCsv: "Download Auto-Tuner Log (CSV)",
+    autoTestRecordsCount: "Logged Tests:",
+    autoTestResolutionScore: "Resolution Score:",
+    autoTestCompRes: "Computational Resolution",
+    autoTestCompResFilter: "Computational Resolution Filter:",
+    autoTestResAll: "All (300px & 400px)",
+    autoTestRes300: "300 px Only",
+    autoTestRes400: "400 px Only",
+    autoTestSaveNow: "Save & Download Log (CSV)",
+    autoTestGridDim: "Compute Grid:",
+    autoTestSweetSpotToggle: "Auto-Stop on Sweet Spot (56% – 65%)",
+    autoTestSweetSpotDesc: "Automatically stop, lock best parameters, and download CSV once score reaches 56%–65%",
+    autoTestSweetSpotMatched: "🎉 Sweet spot resolution reached! Parameters locked & CSV log saved automatically.",
+    autoTestSweetSpotTarget: "Sweet Spot Target: 56% – 65%",
+
     // Generating
     generatingTitle: "Calculating String Art Chords...",
     currentStep: "Current Step",
@@ -169,7 +370,7 @@ export const translations = {
     cancelJob: "Cancel Generation",
     cancelling: "Cancelling...",
     cancelledNotice: "Generation was cancelled.",
-    
+
     // View modes
     viewMode: "View Mode",
     viewStringArt: "String Art",
@@ -181,7 +382,7 @@ export const translations = {
     zoomIn: "Zoom In",
     zoomOut: "Zoom Out",
     fitScreen: "Fit to Screen",
-    
+
     // Player
     playerTitle: "Physical Construction Player",
     play: "Play",
@@ -193,7 +394,7 @@ export const translations = {
     speed: "Speed",
     stepIndicator: "Step {step} of {total}: Nail {from} ➔ Nail {to}",
     savedProgress: "Construction step saved locally on this browser.",
-    
+
     // Exports
     exportTitle: "Download Fabrication Files",
     printWarning: "IMPORTANT: Print templates at 100% / Actual Size. Verify with the printed 10 cm test ruler before hammering.",
@@ -203,21 +404,140 @@ export const translations = {
     downloadPdfActual: "1:1 Actual Size Template (PDF)",
     downloadPdfTiled: "Multi-Page A4 Tiled Template (PDF)",
     downloadCsv: "Nail Sequence (CSV for Excel)",
+    downloadTxt: "Timestamped Nail Sequence (TXT)",
     downloadJson: "Instructions & Metadata (JSON)",
     statsLines: "Rendered Chords",
     statsLengthRaw: "Geometric Thread",
     statsLengthAllowance: "Thread with Reserve",
     stoppingReason: "Stopping Reason",
-    
+    startNewArtwork: "Start New Artwork (Clear All)",
+    clearCacheTooltip: "Clear current artwork and cache to upload another image",
+    clearedNotice: "Artwork and cache cleared successfully. You can now upload a new image.",
+
     // Stopping reasons
     reason_max_steps_reached: "Reached requested maximum line count",
     reason_no_improvement: "No further chords improve image contrast (saturated)",
     reason_cancelled: "Cancelled by user",
-    
+
     // Algorithm note
     algoNoteTitle: "How the Algorithm Works",
     algoNoteText: "The algorithm starts from a white circular canvas and iteratively tests chords from the active nail to find the one that yields the greatest reduction in squared image error while accounting for black ink saturation. It produces one continuous physical thread path.",
-    
+
+    // Text file upload and preview
+    tabUploadImage: "Generate from Photo",
+    tabUploadText: "Preview from Text File (TXT)",
+    uploadTextTitle: "Upload Nail Sequence File",
+    uploadTextDesc: "Upload a text file containing nail numbers to instantly preview the string art and use the interactive construction player.",
+    dragDropTextFile: "Drag and drop your sequence text file here, or click to browse",
+    supportedTextFormats: "Supports TXT, CSV, JSON (comma, line, or arrow delimited)",
+    orPasteSequence: "Or paste nail sequence numbers directly",
+    pastePlaceholder: "Example: 1, 190, 24, 188, 5, 201... or 1 -> 190 -> 24",
+    previewButton: "Preview String Art",
+    sampleButton: "Try Sample Mandala Sequence",
+    parsingFile: "Parsing file and verifying sequence...",
+    detectedSteps: "Detected Line Steps",
+    detectedNails: "Total Nails on Board",
+    boardDiameter: "Board Diameter (mm)",
+    allowancePct: "Reserve Allowance (%)",
+    importedBadge: "Imported Sequence",
+    importedSequenceDesc: "This artwork was imported from a text file. You can preview the chords, replay construction steps, and download fabrication templates.",
+    reason_uploaded_sequence: "Sequence successfully loaded from text file",
+    overrideNailsTitle: "Tune Nails Count",
+    recalculatePreview: "Update Preview",
+    fileUploadedSuccess: "Sequence parsed successfully",
+
+    // Welcome Hero
+    heroBadge: "Next-Gen String Art Engine • Baghdad 2026",
+    heroTitle: "Modern String Art Studio",
+    heroSubtitle: "Transform photos and portraits into breathtaking physical string art masterpieces using a single continuous thread and numbered boundary pins.",
+    heroCtaLaunch: "Launch Studio & Start Creating",
+    heroCtaUploadPhoto: "Generate from Photo",
+    heroCtaUploadText: "Preview from Sequence File (TXT)",
+    heroStat1Val: "100%",
+    heroStat1Label: "Single Continuous Thread",
+    heroStat2Val: "400+",
+    heroStat2Label: "Maximum Pin Precision",
+    heroStat3Val: "1:1",
+    heroStat3Label: "Actual Size Print Blueprints",
+    heroStat4Val: "2026",
+    heroStat4Label: "Iraq - Baghdad",
+
+    // Navigation
+    navHome: "Home",
+    navStudio: "Studio Workspace",
+    navTextPreview: "Text Preview (TXT)",
+    navServices: "Services & Features",
+    navHowItWorks: "How It Works",
+    launchButton: "Launch Studio",
+    headerUploadTextBtn: "Upload Text (TXT)",
+
+    // Text Preview Service Page
+    textServiceTitle: "Text Sequence String Art Preview Service",
+    textServiceSubtitle: "Upload or paste nail sequence numbers (TXT / CSV / JSON) to instantly render interactive string art, inspect thread paths, and control playback steps.",
+    backToStudio: "Back to Full Studio",
+    loadInMainStudio: "Open in Full Studio Workspace",
+
+    // Services Section
+    servicesSectionTitle: "Studio Services & Core Capabilities",
+    servicesSectionSubtitle: "A comprehensive suite of algorithmic and engineering tools to design, preview, and build physical string art.",
+    service1Title: "High-Precision Thread Synthesis",
+    service1Desc: "Greedy optimization algorithm that tests thousands of chords to faithfully reconstruct fine facial features and shadow tones.",
+    service2Title: "Sequence Import & Live Preview (TXT / CSV / JSON)",
+    service2Desc: "Upload or paste nail numbers from text files to instantly inspect and replay the rendered artwork on our interactive canvas.",
+    service3Title: "Interactive Step-by-Step Construction Player",
+    service3Desc: "A real-time physical assembly companion showing active and target nails (From ➔ To), adjustable speed, and local autosave.",
+    service4Title: "1:1 Actual Size & Tiled A4 PDF Blueprints",
+    service4Desc: "Export production-ready templates for home A4 printers or large-format plotters, complete with a 10 cm calibration check ruler.",
+    service5Title: "Thread Distance & Tension Reserve Estimator",
+    service5Desc: "Precise Euclidean chord calculation in meters with an automatic 15% safety allowance for nail wraps and anchor knots.",
+    service6Title: "Comprehensive 1-Click Production Bundle",
+    service6Desc: "Download vector SVGs, multi-page PDFs, CSV spreadsheets, raw TXT sequences, and JSON metadata all packed in a single ZIP.",
+
+    // How It Works Section
+    howTitle: "How to Build Your String Art in 4 Simple Steps",
+    howSubtitle: "A streamlined workflow from raw photo to handcrafted physical wall art.",
+    how1Title: "1. Upload Photo or Sequence File",
+    how1Desc: "Start by selecting a portrait or uploading an existing nail sequence in TXT or CSV format.",
+    how2Title: "2. Tune Circular Crop & Contrast",
+    how2Desc: "Center the subject, configure boundary nail count, board diameter (mm), and contrast.",
+    how3Title: "3. Compute Chords & Preview Live",
+    how3Desc: "The engine solves the optimal chords in seconds, rendering an authentic dark-ink thread simulation.",
+    how4Title: "4. Print Template & Hammer Nails",
+    how4Desc: "Print the 1:1 blueprint, fix the pins into the wooden board, and wind the thread using the player.",
+
+    // Footer
+    footerBrandDesc: "The premier web platform for transforming portraits into real physical string art with millimeter-accurate fabrication files.",
+    footerServicesTitle: "Capabilities",
+    footerQuickLinksTitle: "Quick Navigation",
+    footerFormatsTitle: "Supported Formats",
+    footerLocationBadge: "Proudly engineered with precision in Iraq - Baghdad",
+    footerCopyright: "All Rights Reserved © Iraq - Baghdad 2026",
+    footerAllRightsReserved: "All Rights Reserved © Iraq - Baghdad 2026 | String Art Studio",
+
+    // Bottom Navigation & Menu App Bar
+    bottomNavStudio: "Studio",
+    bottomNavText: "Text Mode",
+    bottomNavServices: "Services",
+    bottomNavMenu: "Menu",
+    bottomNavActionUpload: "Upload",
+    bottomNavActionGenerate: "Generate",
+    bottomNavActionPlay: "Player",
+    bottomNavActionStart: "Start",
+    menuTitle: "Studio Menu & Options",
+    menuSubtitle: "Quick navigation, studio controls, and preferences",
+    menuClose: "Close",
+    menuNavigation: "Quick Navigation",
+    menuPreferences: "Appearance & Language",
+    menuActions: "Project Actions",
+    menuExports: "Export & Print Files",
+    menuExportsDesc: "Download full 1:1 PDFs, SVGs, and step sequences",
+    menuStudioDesc: "Circular crop, contrast tuning, and nail settings",
+    menuTextDesc: "Inspect and preview nail sequences from a TXT file",
+    menuServicesDesc: "Explore workshop tools and fabrication exports",
+    menuHowDesc: "Learn how continuous-thread string art is made",
+    menuStatusOnline: "Backend online and ready",
+    menuStatusOffline: "Backend server offline",
+
     // Theme
     themeDark: "Dark Mode",
     themeLight: "Light Mode",

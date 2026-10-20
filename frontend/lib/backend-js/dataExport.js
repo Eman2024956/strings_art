@@ -8,6 +8,11 @@ export function exportSequenceCsv(sequence) {
   return rows.map((r) => r.join(",")).join("\n");
 }
 
+export function exportSequenceTxt(sequence) {
+  if (!sequence || sequence.length === 0) return "";
+  return sequence.join(", ");
+}
+
 export function exportInstructionsJson(result, config) {
   const data = {
     generator: "String Art Studio (TypeScript / Next.js Engine)",

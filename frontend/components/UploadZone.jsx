@@ -49,11 +49,14 @@ export default function UploadZone({ onUploadSuccess, t }) {
       }
 
       const data = await res.json();
+      const localPreviewUrl = URL.createObjectURL(file);
       onUploadSuccess({
         uploadId: data.upload_id,
         filename: data.filename,
         width: data.width,
         height: data.height,
+        imageBase64: data.image_base64,
+        localPreviewUrl,
         fileObject: file,
       });
     } catch (err) {

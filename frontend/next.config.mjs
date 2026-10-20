@@ -12,22 +12,22 @@ const nextConfig = {
     },
   },
   async rewrites() {
-    const rawBackendUrl = process.env.BACKEND_URL;
-    if (!rawBackendUrl) {
-      // No external backend URL provided: use native Next.js TypeScript/JS API routes!
-      return [];
+    // Only forward to external host if USE_EXTERNAL_BACKEND is explicitly true.
+    // Otherwise, Vercel hosts all UI and API endpoints natively!
+    if (process.env.USE_EXTERNAL_BACKEND === "true" && process.env.BACKEND_URL) {
+      const backendUrl = process.env.BACKEND_URL.replace(/\/+$/, "");
+      return [
+        {
+          source: "/api/:path*",
+          destination: `${backendUrl}/api/:path*`,
+        },
+        {
+          source: "/health",
+          destination: `${backendUrl}/health`,
+        },
+      ];
     }
-    const backendUrl = rawBackendUrl.replace(/\/+$/, "");
-    return [
-      {
-        source: "/api/:path*",
-        destination: `${backendUrl}/api/:path*`,
-      },
-      {
-        source: "/health",
-        destination: `${backendUrl}/health`,
-      },
-    ];
+    return [];
   },
 };
 

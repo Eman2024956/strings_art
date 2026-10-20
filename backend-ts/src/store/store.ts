@@ -71,7 +71,7 @@ export class Store {
     }
   }
 
-  static completeJob(jobId: string, result: JobResult, stoppingReason: string): void {
+  static completeJob(jobId: string, result: JobResult, stoppingReason: string = "completed"): void {
     const job = jobsMap.get(jobId);
     if (job) {
       job.status = "completed";
@@ -116,5 +116,50 @@ export class Store {
     const dir = path.join(JOBS_DIR, jobId);
     fs.mkdirSync(dir, { recursive: true });
     return dir;
+  }
+
+  static clearJob(jobId: string): void {
+    jobsMap.delete(jobId);
+    cancelSet.delete(jobId);
+    try {
+      const jobDir = path.join(JOBS_DIR, jobId);
+      if (fs.existsSync(jobDir)) {
+        fs.rmSync(jobDir, { recursive: true, force: true });
+      }
+    } catch (e) {
+      console.warn("Could not remove job dir:", e);
+    }
+  }
+
+  static clearUpload(uploadId: string): void {
+    const record = uploadsMap.get(uploadId);
+    uploadsMap.delete(uploadId);
+    if (record?.file_path) {
+      try {
+        if (fs.existsSync(record.file_path)) fs.unlinkSync(record.file_path);
+      } catch (e) {
+        console.warn("Could not remove upload file:", e);
+      }
+    }
+  }
+
+  static clearAll(): void {
+    uploadsMap.clear();
+    jobsMap.clear();
+    cancelSet.clear();
+    try {
+      if (fs.existsSync(UPLOADS_DIR)) {
+        for (const f of fs.readdirSync(UPLOADS_DIR)) {
+          try { fs.unlinkSync(path.join(UPLOADS_DIR, f)); } catch {}
+        }
+      }
+      if (fs.existsSync(JOBS_DIR)) {
+        for (const f of fs.readdirSync(JOBS_DIR)) {
+          try { fs.rmSync(path.join(JOBS_DIR, f), { recursive: true, force: true }); } catch {}
+        }
+      }
+    } catch (e) {
+      console.warn("Could not clear all cache:", e);
+    }
   }
 }

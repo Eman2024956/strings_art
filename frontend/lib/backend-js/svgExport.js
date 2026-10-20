@@ -36,3 +36,46 @@ export function generateSvgTemplate(nailsCount, diameterMm, marginMm = 20.0) {
   svg.push(`</svg>`);
   return svg.join("\n");
 }
+
+export async function renderStringArtPreviewPng({ sequence, nailsCount, size = 1200, strength = 0.10 }) {
+  const sharp = (await import("sharp")).default;
+  const c = size / 2.0;
+  const r = c - 45.0;
+  const nails = [];
+  const angleStep = (2.0 * Math.PI) / nailsCount;
+  for (let i = 0; i < nailsCount; i++) {
+    const a = -Math.PI / 2.0 + i * angleStep;
+    nails.push([
+      (c + r * Math.cos(a)).toFixed(1),
+      (c + r * Math.sin(a)).toFixed(1),
+    ]);
+  }
+
+  const strokeAlpha = 0.22;
+
+  let svg = `<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="${size}" height="${size}" viewBox="0 0 ${size} ${size}">
+  <rect width="100%" height="100%" fill="#ffffff" />
+  <circle cx="${c}" cy="${c}" r="${r}" fill="#ffffff" stroke="#cbd5e1" stroke-width="1.5" />
+  <g stroke="rgba(15,15,15,${strokeAlpha.toFixed(3)})" stroke-width="0.75" stroke-linecap="round">
+`;
+
+  if (sequence && sequence.length > 1) {
+    for (let i = 1; i < sequence.length; i++) {
+      const p1 = nails[sequence[i - 1] - 1];
+      const p2 = nails[sequence[i] - 1];
+      if (p1 && p2) {
+        svg += `<line x1="${p1[0]}" y1="${p1[1]}" x2="${p2[0]}" y2="${p2[1]}"/>\n`;
+      }
+    }
+  }
+
+  svg += `  </g>\n`;
+  svg += `  <g fill="#09090b">\n`;
+  for (let i = 0; i < nailsCount; i++) {
+    svg += `<circle cx="${nails[i][0]}" cy="${nails[i][1]}" r="2" />\n`;
+  }
+  svg += `  </g>\n</svg>`;
+
+  return await sharp(Buffer.from(svg)).png().toBuffer();
+}

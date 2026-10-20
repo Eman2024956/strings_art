@@ -1,13 +1,16 @@
 "use client";
 
 import React, { useState } from "react";
-import { Sliders, Sparkles, Info, Play, CheckCircle2 } from "lucide-react";
+import { Sliders, Sparkles, Info, CheckCircle2 } from "lucide-react";
 
 export default function ParametersPanel({
   params,
   setParams,
   onStartGeneration,
   isGenerating,
+  autoRegen = true,
+  setAutoRegen,
+  isAutoGenerating = false,
   t,
 }) {
   const [activePreset, setActivePreset] = useState("balanced");
@@ -17,29 +20,29 @@ export default function ParametersPanel({
     if (presetKey === "fast") {
       setParams((p) => ({
         ...p,
-        nails: 100,
-        steps: 800,
-        size: 200,
-        minGap: 8,
-        strength: 0.14,
+        nails: 150,
+        steps: 1200,
+        size: 250,
+        minGap: 15,
+        strength: 0.10,
       }));
     } else if (presetKey === "balanced") {
       setParams((p) => ({
         ...p,
         nails: 200,
-        steps: 3000,
+        steps: 2200,
         size: 300,
-        minGap: 10,
-        strength: 0.12,
+        minGap: 14,
+        strength: 0.10,
       }));
     } else if (presetKey === "masterpiece") {
       setParams((p) => ({
         ...p,
         nails: 280,
-        steps: 4500,
+        steps: 3500,
         size: 400,
-        minGap: 12,
-        strength: 0.10,
+        minGap: 25,
+        strength: 0.06,
       }));
     }
   };
@@ -50,15 +53,41 @@ export default function ParametersPanel({
   };
 
   return (
-    <div className="bg-white dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-800 rounded-2xl p-5 shadow-sm space-y-6">
-      {/* Title */}
-      <div className="flex items-center justify-between border-b border-neutral-100 dark:border-neutral-800 pb-3">
+    <div className="bg-white dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-800 rounded-2xl p-5 shadow-sm space-y-6 transition-colors">
+      {/* Title & Auto-Regen Toggle */}
+      <div className="flex items-center justify-between border-b border-neutral-100 dark:border-neutral-800 pb-3 gap-2 flex-wrap">
         <div className="flex items-center gap-2">
           <Sliders className="w-5 h-5 text-indigo-600 dark:text-indigo-400" />
           <h2 className="font-bold text-base text-neutral-900 dark:text-neutral-100">
             {t.paramTitle}
           </h2>
         </div>
+
+        {setAutoRegen && (
+          <label
+            title={t.autoRegenDesc}
+            className="flex items-center gap-1.5 px-2.5 py-1 rounded-xl bg-neutral-100 dark:bg-neutral-800 border border-neutral-200 dark:border-neutral-700/80 cursor-pointer select-none text-[11px] font-bold text-neutral-700 dark:text-neutral-300 hover:border-indigo-400 transition"
+          >
+            <input
+              type="checkbox"
+              checked={autoRegen}
+              onChange={(e) => setAutoRegen(e.target.checked)}
+              className="accent-indigo-600 w-3.5 h-3.5 rounded cursor-pointer"
+            />
+            <span className="flex items-center gap-1.5">
+              <span
+                className={`w-2 h-2 rounded-full ${
+                  autoRegen
+                    ? isGenerating
+                      ? "bg-amber-400 animate-ping"
+                      : "bg-emerald-500 animate-pulse"
+                    : "bg-neutral-400"
+                }`}
+              />
+              <span>{t.autoRegen}</span>
+            </span>
+          </label>
+        )}
       </div>
 
       {/* Presets buttons */}
@@ -74,8 +103,9 @@ export default function ParametersPanel({
           ].map((preset) => (
             <button
               key={preset.key}
+              type="button"
               onClick={() => applyPreset(preset.key)}
-              className={`p-3 rounded-xl border text-start transition flex flex-col justify-between ${
+              className={`p-3 rounded-xl border text-start transition flex flex-col justify-between cursor-pointer ${
                 activePreset === preset.key
                   ? "border-indigo-600 bg-indigo-50/50 dark:bg-indigo-950/30 text-indigo-900 dark:text-indigo-200 ring-2 ring-indigo-500/20"
                   : "border-neutral-200 dark:border-neutral-800 hover:border-neutral-300 dark:hover:border-neutral-700 bg-neutral-50/40 dark:bg-neutral-800/40 text-neutral-700 dark:text-neutral-300"
@@ -99,9 +129,9 @@ export default function ParametersPanel({
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         {/* Nails Count */}
         <div className="bg-neutral-50/50 dark:bg-neutral-800/30 p-3.5 rounded-xl border border-neutral-100 dark:border-neutral-800">
-          <div className="flex justify-between items-center text-xs font-semibold text-neutral-800 dark:text-neutral-200 mb-1">
+          <div className="flex justify-between items-center text-xs font-bold text-neutral-800 dark:text-neutral-200 mb-1">
             <span>{t.nails}</span>
-            <span className="font-mono text-indigo-600 dark:text-indigo-400 font-bold">
+            <span className="font-mono text-indigo-600 dark:text-indigo-400 font-black text-sm">
               {params.nails}
             </span>
           </div>
@@ -126,9 +156,9 @@ export default function ParametersPanel({
 
         {/* Steps / Thread Segments */}
         <div className="bg-neutral-50/50 dark:bg-neutral-800/30 p-3.5 rounded-xl border border-neutral-100 dark:border-neutral-800">
-          <div className="flex justify-between items-center text-xs font-semibold text-neutral-800 dark:text-neutral-200 mb-1">
+          <div className="flex justify-between items-center text-xs font-bold text-neutral-800 dark:text-neutral-200 mb-1">
             <span>{t.steps}</span>
-            <span className="font-mono text-indigo-600 dark:text-indigo-400 font-bold">
+            <span className="font-mono text-indigo-600 dark:text-indigo-400 font-black text-sm">
               {params.steps}
             </span>
           </div>
@@ -153,9 +183,9 @@ export default function ParametersPanel({
 
         {/* Board Diameter mm */}
         <div className="bg-neutral-50/50 dark:bg-neutral-800/30 p-3.5 rounded-xl border border-neutral-100 dark:border-neutral-800">
-          <div className="flex justify-between items-center text-xs font-semibold text-neutral-800 dark:text-neutral-200 mb-1">
+          <div className="flex justify-between items-center text-xs font-bold text-neutral-800 dark:text-neutral-200 mb-1">
             <span>{t.boardDiameter}</span>
-            <span className="font-mono text-indigo-600 dark:text-indigo-400 font-bold">
+            <span className="font-mono text-indigo-600 dark:text-indigo-400 font-black text-sm">
               {params.diameter_mm} mm
             </span>
           </div>
@@ -180,9 +210,9 @@ export default function ParametersPanel({
 
         {/* Resolution */}
         <div className="bg-neutral-50/50 dark:bg-neutral-800/30 p-3.5 rounded-xl border border-neutral-100 dark:border-neutral-800">
-          <div className="flex justify-between items-center text-xs font-semibold text-neutral-800 dark:text-neutral-200 mb-1">
+          <div className="flex justify-between items-center text-xs font-bold text-neutral-800 dark:text-neutral-200 mb-1">
             <span>{t.resolution}</span>
-            <span className="font-mono text-indigo-600 dark:text-indigo-400 font-bold">
+            <span className="font-mono text-indigo-600 dark:text-indigo-400 font-black text-sm">
               {params.size} px
             </span>
           </div>
@@ -197,10 +227,10 @@ export default function ParametersPanel({
                 onClick={() =>
                   handleCustomChange((p) => ({ ...p, size: res }))
                 }
-                className={`py-1 text-xs rounded-lg border font-medium transition ${
+                className={`py-1 text-xs rounded-lg border font-black font-mono transition cursor-pointer ${
                   params.size === res
                     ? "bg-indigo-600 text-white border-indigo-600"
-                    : "bg-white dark:bg-neutral-900 text-neutral-700 dark:text-neutral-300 border-neutral-300 dark:border-neutral-700"
+                    : "bg-white dark:bg-neutral-900 text-neutral-700 dark:text-neutral-300 border-neutral-300 dark:border-neutral-700 hover:bg-neutral-100 dark:hover:bg-neutral-800"
                 }`}
               >
                 {res} px
@@ -211,13 +241,13 @@ export default function ParametersPanel({
 
         {/* Thread Darkness / Strength */}
         <div className="bg-neutral-50/50 dark:bg-neutral-800/30 p-3.5 rounded-xl border border-neutral-100 dark:border-neutral-800 md:col-span-2">
-          <div className="flex justify-between items-center text-xs font-semibold text-neutral-800 dark:text-neutral-200 mb-1">
+          <div className="flex justify-between items-center text-xs font-bold text-neutral-800 dark:text-neutral-200 mb-1">
             <span>{t.threadDarkness}</span>
-            <span className="font-mono text-indigo-600 dark:text-indigo-400 font-bold">
+            <span className="font-mono text-indigo-600 dark:text-indigo-400 font-black text-sm">
               {params.strength.toFixed(2)}
             </span>
           </div>
-          <div className="flex items-start gap-1.5 text-[11px] text-amber-600 dark:text-amber-400/90 mb-2.5">
+          <div className="flex items-start gap-1.5 text-[11px] text-amber-600 dark:text-amber-400/90 mb-2.5 font-medium">
             <Info className="w-3.5 h-3.5 shrink-0 mt-0.5" />
             <span>{t.threadDarknessHelp}</span>
           </div>
@@ -237,11 +267,11 @@ export default function ParametersPanel({
           />
         </div>
 
-        {/* Min Gap & Start Nail & Allowance */}
+        {/* Min Gap & Allowance */}
         <div className="bg-neutral-50/50 dark:bg-neutral-800/30 p-3.5 rounded-xl border border-neutral-100 dark:border-neutral-800">
-          <div className="flex justify-between items-center text-xs font-semibold text-neutral-800 dark:text-neutral-200 mb-1">
+          <div className="flex justify-between items-center text-xs font-bold text-neutral-800 dark:text-neutral-200 mb-1">
             <span>{t.minGap}</span>
-            <span className="font-mono text-indigo-600 dark:text-indigo-400 font-bold">
+            <span className="font-mono text-indigo-600 dark:text-indigo-400 font-black text-sm">
               {params.minGap}
             </span>
           </div>
@@ -265,9 +295,9 @@ export default function ParametersPanel({
         </div>
 
         <div className="bg-neutral-50/50 dark:bg-neutral-800/30 p-3.5 rounded-xl border border-neutral-100 dark:border-neutral-800">
-          <div className="flex justify-between items-center text-xs font-semibold text-neutral-800 dark:text-neutral-200 mb-1">
+          <div className="flex justify-between items-center text-xs font-bold text-neutral-800 dark:text-neutral-200 mb-1">
             <span>{t.allowancePct}</span>
-            <span className="font-mono text-indigo-600 dark:text-indigo-400 font-bold">
+            <span className="font-mono text-indigo-600 dark:text-indigo-400 font-black text-sm">
               +{params.allowancePct}%
             </span>
           </div>
@@ -293,9 +323,10 @@ export default function ParametersPanel({
 
       {/* Start Button */}
       <button
+        type="button"
         onClick={onStartGeneration}
         disabled={isGenerating}
-        className="w-full py-4 rounded-xl bg-gradient-to-r from-indigo-600 via-indigo-700 to-rose-600 text-white font-bold text-base shadow-lg shadow-indigo-600/30 hover:opacity-95 active:scale-[0.99] transition disabled:opacity-50 disabled:pointer-events-none flex items-center justify-center gap-2"
+        className="w-full py-4 rounded-xl bg-gradient-to-r from-indigo-600 via-indigo-700 to-rose-600 text-white font-bold text-base shadow-lg shadow-indigo-600/30 hover:opacity-95 active:scale-[0.99] transition disabled:opacity-50 disabled:pointer-events-none flex items-center justify-center gap-2 cursor-pointer"
       >
         <Sparkles className="w-5 h-5" />
         <span>{t.generateButton}</span>

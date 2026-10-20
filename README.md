@@ -53,6 +53,73 @@ The default 15% allowance ensures sufficient spool thread for nail wraps, starti
 
 ---
 
+## 🎛️ All Parameters Guide | دليل ضبط الإعدادات للحصول على أعلى دقة
+
+To achieve photorealistic resolution, crisp facial features, and deep contrast in your string art, follow this manual guide:
+
+### 1. Image Editor Adjustments (Before Processing)
+The visual quality of string art depends directly on the framing, contrast, and pre-processing of the source image:
+
+* **Zoom & Head Framing (`1.4x – 1.8x`)**:
+  * Scale and pan the portrait so the face and hair fill **80% to 90%** of the circular viewport.
+  * *Why:* If you leave large empty white areas (such as wide backgrounds or white shirts), strings crossing from one side to the other will leave faint stray spiderwebs across the background.
+* **Contrast (`1.25 – 1.40`)**:
+  * Increase contrast by **+25% to +40%**.
+  * Enhances separation between skin midtones and shadow features (pupils, eyelids, nostrils, lips, jawline, beard).
+* **Brightness (`0.90 – 0.95`)**:
+  * Slightly darken bright studio portraits so soft highlights and skin contours don't get washed out.
+* **Automatic Contrast Normalization (Auto-Stretch to RGB 0,0,0)**:
+  * The processing pipeline automatically inspects pixels within the circular mask and stretches the luminance range:
+    * The darkest features (hair, eyes, beard) map down to **pure black `rgb(0,0,0)` (target darkness = `1.0`)**.
+    * The brightest background highlights map to **pure white `rgb(255,255,255)` (target darkness = `0.0`)**.
+
+---
+
+### 2. Parameter-by-Parameter Breakdown
+
+* **Nails / Pins (`50 – 400`)**:
+  * **200 Nails**: Good for simple silhouettes, logos, and geometric patterns.
+  * **280 – 300 Nails (Recommended)**: The sweet spot for detailed human portraits. Provides high angular density to resolve eyes, nose, and mouth contours while keeping physical nail spacing comfortable (~4.5 mm on a 400 mm board).
+  * **360 – 400 Nails**: Ultra-fine detail for large boards (600 mm+). Requires precision drilling.
+
+* **Steps / Lines (`500 – 8000`)**:
+  * **2,500 Lines**: Fast draft.
+  * **3,500 – 4,500 Lines (Recommended)**: Optimal portrait density. Allows smooth grayscale shading and rich tonal buildup without muddy over-saturation.
+  * **5,000+ Lines**: For ultra-dark moody art; requires lower thread strength (`0.06 – 0.07`).
+
+* **Min Gap (`2 – 50`)**:
+  * Restricts how close two connected nails can be along the perimeter.
+  * **Recommended: `18 – 24`**.
+  * *Why:* If `Min Gap` is too low (e.g. `5`), chords connect neighboring pins and form an ugly dense black ring around the rim. Setting `Min Gap` to 18–24 forces threads deeper across the face, keeping the border clean and crisp.
+
+* **Thread Darkness / Strength (`0.02 – 0.30`)**:
+  * **Recommended: `0.08 – 0.10`**.
+  * Represents simulated thread opacity per pass. Lower strength allows 30–40 overlapping passes to build deep, realistic grayscale gradations without harsh banding.
+
+* **Calculation Resolution / Size (`200, 300, 400 px`)**:
+  * **Recommended: `300 px` or `400 px`**.
+  * Higher Bresenham raster resolution during chord scoring for sharp edge rendering.
+
+* **Board Diameter (`100 – 1200 mm`)**:
+  * Physical scale of the circular wooden board (e.g., `400 mm` = 40 cm). Controls SVG, PDF 1:1, and thread length calculations.
+
+* **Thread Safety Allowance (`0% – 40%`)**:
+  * **Recommended: `15% – 20%`**.
+  * Extra spool length to account for wrapping around nails, starting/ending knots, and tension slack.
+
+---
+
+### 📋 Recommended Presets Table
+
+| Goal | Nails | Steps | Min Gap | Strength | Resolution | Board Size |
+| :--- | :---: | :---: | :---: | :---: | :---: | :---: |
+| **Photorealistic Portrait (Masterpiece)** | **`280 – 300`** | **`3,800 – 4,500`** | **`20`** | **`0.09`** | **`300 px`** | **`400 – 500 mm`** |
+| **High-Contrast Bold Portrait** | `240` | `3,200` | `18` | `0.11` | `300 px` | `400 mm` |
+| **Large Exhibition Board (60+ cm)** | `320 – 360` | `4,500 – 5,500` | `24` | `0.08` | `400 px` | `600 – 800 mm` |
+| **Quick Test / Fast Draft** | `180` | `2,000` | `14` | `0.12` | `200 px` | `300 mm` |
+
+---
+
 ## 🚀 Quick Start (Local Development)
 
 ### Prerequisites

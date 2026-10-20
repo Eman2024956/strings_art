@@ -104,27 +104,31 @@ export default function ConstructionPlayer({
       </div>
 
       {/* Active step banner */}
-      <div className="bg-gradient-to-r from-indigo-50 to-rose-50 dark:from-neutral-800 dark:to-neutral-800/60 p-4 rounded-xl border border-indigo-100 dark:border-neutral-700 flex items-center justify-between">
+      <div className="bg-gradient-to-r from-indigo-50 via-purple-50 to-rose-50 dark:from-neutral-800 dark:to-neutral-800/80 p-4 rounded-xl border border-indigo-100 dark:border-neutral-700 flex items-center justify-between shadow-sm">
         <div>
-          <span className="text-xs uppercase font-semibold text-neutral-500">
+          <span className="text-xs uppercase font-bold text-neutral-600 dark:text-neutral-400">
             {t.currentStep}
           </span>
-          <div className="text-lg font-extrabold text-neutral-900 dark:text-white font-mono">
-            {currentStep} / {totalSteps}
+          <div className="text-2xl sm:text-3xl font-black text-neutral-900 dark:text-white font-mono tracking-tight mt-0.5">
+            <span className="font-black">{currentStep}</span>
+            <span className="text-neutral-400 font-bold mx-1">/</span>
+            <span className="font-black text-neutral-700 dark:text-neutral-300">{totalSteps}</span>
           </div>
         </div>
         <div className="text-end">
-          <span className="text-xs uppercase font-semibold text-neutral-500">
+          <span className="text-xs uppercase font-bold text-neutral-600 dark:text-neutral-400">
             {t.viewStringArt}
           </span>
-          <div className="text-lg font-black text-rose-600 dark:text-rose-400 font-mono">
-            {fromNail} ➔ {toNail}
+          <div className="text-2xl sm:text-3xl font-black text-rose-600 dark:text-rose-400 font-mono tracking-wide mt-0.5">
+            <span className="font-black text-indigo-600 dark:text-indigo-400">#{fromNail}</span>
+            <span className="text-neutral-400 font-bold mx-1.5">➔</span>
+            <span className="font-black text-rose-600 dark:text-rose-400">#{toNail}</span>
           </div>
         </div>
       </div>
 
       {/* Scrubber slider */}
-      <div className="space-y-1">
+      <div className="space-y-1.5">
         <input
           type="range"
           min="1"
@@ -133,9 +137,9 @@ export default function ConstructionPlayer({
           onChange={(e) => handleSeek(parseInt(e.target.value, 10))}
           className="w-full accent-indigo-600 h-2 bg-neutral-200 dark:bg-neutral-700 rounded-lg cursor-pointer"
         />
-        <div className="flex justify-between text-[11px] text-neutral-400 font-mono">
-          <span>1</span>
-          <span>{totalSteps}</span>
+        <div className="flex justify-between text-xs font-black text-neutral-600 dark:text-neutral-400 font-mono px-0.5">
+          <span className="font-black">#1</span>
+          <span className="font-black">#{totalSteps}</span>
         </div>
       </div>
 
@@ -202,7 +206,7 @@ export default function ConstructionPlayer({
             <button
               key={s}
               onClick={() => setSpeed(s)}
-              className={`px-2 py-0.5 text-xs font-semibold rounded-md transition ${
+              className={`px-2.5 py-1 text-xs font-black font-mono rounded-md transition ${
                 speed === s
                   ? "bg-white dark:bg-neutral-700 text-indigo-600 dark:text-indigo-400 shadow-sm"
                   : "text-neutral-500 hover:text-neutral-800 dark:hover:text-neutral-200"

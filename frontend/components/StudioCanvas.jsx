@@ -16,6 +16,7 @@ export default function StudioCanvas({
   uploadId,
   currentStepIndex,
   showNails = true,
+  setShowNails,
   viewMode = "string_art",
   setViewMode,
   t,
@@ -65,7 +66,7 @@ export default function StudioCanvas({
     ctx.translate(-width / 2, -height / 2);
 
     const center = width / 2;
-    const radius = center - 20;
+    const radius = center - 35;
 
     // Background circle
     ctx.fillStyle = "#ffffff";
@@ -94,10 +95,10 @@ export default function StudioCanvas({
     // Draw String Art lines (in string_art, overlay, or split modes)
     if (
       (viewMode === "string_art" || viewMode === "overlay" || viewMode === "split") &&
-      jobResult.nails_px &&
+      (jobResult.nails_px || jobResult.nailsPx || jobResult.nails_count || jobResult.nailsCount) &&
       jobResult.sequence
     ) {
-      const nails = jobResult.nails_px;
+      const nails = jobResult.nails_px || jobResult.nailsPx;
       const sequence = jobResult.sequence;
       const stepsToRender =
         currentStepIndex !== null && currentStepIndex !== undefined
@@ -108,13 +109,17 @@ export default function StudioCanvas({
       const resSize = jobResult.size || 300;
       const scale = (radius * 2) / (resSize - 4);
       const resCenter = (resSize - 1) / 2;
+      const totalNails = jobResult.nails_count || jobResult.nailsCount || (nails ? nails.length : 200);
 
       const getCanvasNail = (idx) => {
-        const pt = nails[idx];
-        if (!pt) return [center, center];
-        const nx = center + (pt[0] - resCenter) * scale;
-        const ny = center + (pt[1] - resCenter) * scale;
-        return [nx, ny];
+        if (nails && nails[idx]) {
+          const pt = nails[idx];
+          const nx = center + (pt[0] - resCenter) * scale;
+          const ny = center + (pt[1] - resCenter) * scale;
+          return [nx, ny];
+        }
+        const a = -Math.PI / 2 + idx * ((2 * Math.PI) / totalNails);
+        return [center + radius * Math.cos(a), center + radius * Math.sin(a)];
       };
 
       // Clip for split mode
@@ -139,51 +144,31 @@ export default function StudioCanvas({
         ctx.clip();
       }
 
-      // Draw all string segments up to stepsToRender
-      ctx.beginPath();
-      ctx.strokeStyle = "rgba(10, 10, 10, 0.16)";
+      // Precompute canvas nail coordinates to optimize loop performance
+      const nailCoords = [];
+      for (let i = 0; i < totalNails; i++) {
+        nailCoords.push(getCanvasNail(i));
+      }
+
+      // Draw all string segments up to stepsToRender with true cumulative alpha blending
+      // In string art, overlapping threads compound in darkness (source-over) to create
+      // deep blacks and realistic shading across dense areas like hair, eyes, and contours.
+      // Realistic thread stroke appearance matching physical black embroidery thread
+      const strokeAlpha = 0.22;
+      ctx.strokeStyle = `rgba(10, 10, 10, ${strokeAlpha})`;
       ctx.lineWidth = 0.65;
 
       for (let i = 1; i <= stepsToRender; i++) {
-        const fromNail = sequence[i - 1] - 1;
-        const toNail = sequence[i] - 1;
-        const p1 = getCanvasNail(fromNail);
-        const p2 = getCanvasNail(toNail);
-        ctx.moveTo(p1[0], p1[1]);
-        ctx.lineTo(p2[0], p2[1]);
-      }
-      ctx.stroke();
-
-      // Highlight the active segment if player is at a specific step
-      if (
-        currentStepIndex !== null &&
-        currentStepIndex !== undefined &&
-        currentStepIndex > 0 &&
-        currentStepIndex < sequence.length
-      ) {
-        const activeFrom = sequence[currentStepIndex - 1] - 1;
-        const activeTo = sequence[currentStepIndex] - 1;
-        const p1 = getCanvasNail(activeFrom);
-        const p2 = getCanvasNail(activeTo);
-
+        const p1 = nailCoords[sequence[i - 1] - 1];
+        const p2 = nailCoords[sequence[i] - 1];
+        if (!p1 || !p2) continue;
         ctx.beginPath();
-        ctx.strokeStyle = "#e11d48"; // vibrant rose
-        ctx.lineWidth = 2.0;
         ctx.moveTo(p1[0], p1[1]);
         ctx.lineTo(p2[0], p2[1]);
         ctx.stroke();
-
-        // Pulsing active nail markers
-        ctx.fillStyle = "#e11d48";
-        ctx.beginPath();
-        ctx.arc(p2[0], p2[1], 4.5, 0, 2 * Math.PI);
-        ctx.fill();
-
-        ctx.fillStyle = "#4f46e5";
-        ctx.beginPath();
-        ctx.arc(p1[0], p1[1], 4, 0, 2 * Math.PI);
-        ctx.fill();
       }
+
+
 
       if (viewMode === "split") {
         ctx.restore();
@@ -199,8 +184,8 @@ export default function StudioCanvas({
     }
 
     // Outer guideline ring
-    ctx.strokeStyle = "#d4d4d8";
-    ctx.lineWidth = 1;
+    ctx.strokeStyle = "#cbd5e1";
+    ctx.lineWidth = 1.5;
     ctx.beginPath();
     ctx.arc(center, center, radius, 0, 2 * Math.PI);
     ctx.stroke();
@@ -210,7 +195,8 @@ export default function StudioCanvas({
       const N = jobResult.nails_count;
       const angleStep = (2 * Math.PI) / N;
 
-      ctx.font = `${Math.max(7, Math.min(10, 800 / N))}px sans-serif`;
+      const fontSize = Math.max(9, Math.min(13, Math.round(950 / N)));
+      ctx.font = `bold ${fontSize}px ui-sans-serif, system-ui, -apple-system, sans-serif`;
       ctx.textAlign = "center";
       ctx.textBaseline = "middle";
 
@@ -221,16 +207,17 @@ export default function StudioCanvas({
         const ny = center + radius * Math.sin(a);
 
         // Nail dot
-        ctx.fillStyle = "#18181b";
+        ctx.fillStyle = "#09090b";
         ctx.beginPath();
-        ctx.arc(nx, ny, 1.2, 0, 2 * Math.PI);
+        ctx.arc(nx, ny, 1.5, 0, 2 * Math.PI);
         ctx.fill();
 
         // Number (only render all if zoomed in or reasonable count)
-        if (zoom >= 1.4 || N <= 150 || (i + 1) % 5 === 0 || i === 0) {
-          const tx = center + (radius + 10) * Math.cos(a);
-          const ty = center + (radius + 10) * Math.sin(a);
-          ctx.fillStyle = i === 0 ? "#e11d48" : "#71717a";
+        if (zoom >= 1.3 || N <= 150 || (i + 1) % 5 === 0 || i === 0) {
+          const numDist = radius + Math.max(11, fontSize + 3);
+          const tx = center + numDist * Math.cos(a);
+          const ty = center + numDist * Math.sin(a);
+          ctx.fillStyle = "#09090b";
           ctx.fillText(`${i + 1}`, tx, ty);
         }
       }
@@ -277,54 +264,79 @@ export default function StudioCanvas({
   };
 
   return (
-    <div className="relative flex flex-col bg-neutral-100 dark:bg-neutral-950 rounded-2xl border border-neutral-200 dark:border-neutral-800 overflow-hidden shadow-inner select-none">
-      {/* Top toolbar */}
-      <div className="absolute top-3 inset-x-3 z-20 flex flex-wrap items-center justify-between gap-2 pointer-events-none">
-        {/* View Mode Buttons */}
-        <div className="flex items-center gap-1 bg-white/90 dark:bg-neutral-900/90 backdrop-blur-md p-1 rounded-xl shadow-md border border-neutral-200/80 dark:border-neutral-800 pointer-events-auto">
-          {[
-            { id: "string_art", label: t.viewStringArt },
-            { id: "target", label: t.viewTarget },
-            { id: "original", label: t.viewOriginal },
-            { id: "split", label: t.viewSplit },
-            { id: "overlay", label: t.viewOverlay },
-          ].map((mode) => (
+    <div className="flex flex-col bg-white dark:bg-neutral-900 rounded-2xl border border-neutral-200 dark:border-neutral-800 overflow-hidden shadow-sm select-none">
+      {/* Studio Header Toolbar (Outside canvas, zero overlap) */}
+      <div className="flex flex-wrap items-center justify-between gap-3 bg-neutral-50/90 dark:bg-neutral-900/90 backdrop-blur-md px-4 py-3 border-b border-neutral-200 dark:border-neutral-800 z-10">
+        <div className="flex flex-wrap items-center gap-2">
+          {/* View Mode Buttons (only if source photos exist) */}
+          {(targetImg || originalImg) ? (
+            <div className="flex items-center gap-1 bg-white dark:bg-neutral-800 p-1 rounded-xl shadow-xs border border-neutral-200/60 dark:border-neutral-700/60">
+              {[
+                { id: "string_art", label: t.viewStringArt },
+                { id: "target", label: t.viewTarget },
+                { id: "original", label: t.viewOriginal },
+                { id: "split", label: t.viewSplit },
+                { id: "overlay", label: t.viewOverlay },
+              ].map((mode) => (
+                <button
+                  key={mode.id}
+                  onClick={() => setViewMode(mode.id)}
+                  className={`px-3 py-1.5 text-xs font-bold rounded-lg transition ${viewMode === mode.id
+                      ? "bg-indigo-600 text-white shadow-sm"
+                      : "text-neutral-600 dark:text-neutral-300 hover:bg-neutral-100 dark:hover:bg-neutral-700"
+                    }`}
+                >
+                  {mode.label}
+                </button>
+              ))}
+            </div>
+          ) : (
+            <div className="flex items-center gap-2 px-3 py-1.5 rounded-xl bg-white dark:bg-neutral-800 border border-neutral-200/60 dark:border-neutral-700/60 shadow-xs">
+              <Sparkles className="w-4 h-4 text-indigo-600 dark:text-indigo-400" />
+              <span className="text-xs font-bold text-neutral-800 dark:text-neutral-200">
+                {t.viewStringArt}
+              </span>
+            </div>
+          )}
+
+          {/* Toggle Nails Button */}
+          {setShowNails && (
             <button
-              key={mode.id}
-              onClick={() => setViewMode(mode.id)}
-              className={`px-2.5 py-1 text-xs font-semibold rounded-lg transition ${
-                viewMode === mode.id
-                  ? "bg-indigo-600 text-white shadow-sm"
-                  : "text-neutral-600 dark:text-neutral-300 hover:bg-neutral-100 dark:hover:bg-neutral-800"
-              }`}
+              onClick={() => setShowNails(!showNails)}
+              className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-bold border transition ${showNails
+                  ? "bg-indigo-50 text-indigo-700 border-indigo-200 dark:bg-indigo-950/40 dark:text-indigo-300 dark:border-indigo-900"
+                  : "bg-white text-neutral-500 border-neutral-200 dark:bg-neutral-800 dark:text-neutral-400 dark:border-neutral-700"
+                }`}
+              title={t.toggleNails}
             >
-              {mode.label}
+              <Eye className="w-3.5 h-3.5" />
+              <span>{t.toggleNails}</span>
             </button>
-          ))}
+          )}
         </div>
 
         {/* Zoom Controls */}
-        <div className="flex items-center gap-1 bg-white/90 dark:bg-neutral-900/90 backdrop-blur-md p-1 rounded-xl shadow-md border border-neutral-200/80 dark:border-neutral-800 pointer-events-auto">
+        <div className="flex items-center gap-1 bg-white dark:bg-neutral-800 p-1 rounded-xl shadow-xs border border-neutral-200/60 dark:border-neutral-700/60">
           <button
             onClick={() => handleZoom(0.25)}
-            className="p-1.5 text-neutral-600 dark:text-neutral-300 hover:bg-neutral-100 dark:hover:bg-neutral-800 rounded-lg transition"
+            className="p-1.5 text-neutral-600 dark:text-neutral-300 hover:bg-neutral-100 dark:hover:bg-neutral-700 rounded-lg transition"
             title={t.zoomIn}
           >
             <ZoomIn className="w-4 h-4" />
           </button>
-          <span className="text-[11px] font-mono px-1 font-semibold text-neutral-600 dark:text-neutral-300">
+          <span className="text-[12px] font-mono px-2 font-black text-neutral-800 dark:text-neutral-100 min-w-[46px] text-center">
             {Math.round(zoom * 100)}%
           </span>
           <button
             onClick={() => handleZoom(-0.25)}
-            className="p-1.5 text-neutral-600 dark:text-neutral-300 hover:bg-neutral-100 dark:hover:bg-neutral-800 rounded-lg transition"
+            className="p-1.5 text-neutral-600 dark:text-neutral-300 hover:bg-neutral-100 dark:hover:bg-neutral-700 rounded-lg transition"
             title={t.zoomOut}
           >
             <ZoomOut className="w-4 h-4" />
           </button>
           <button
             onClick={handleResetZoom}
-            className="p-1.5 text-neutral-600 dark:text-neutral-300 hover:bg-neutral-100 dark:hover:bg-neutral-800 rounded-lg transition"
+            className="p-1.5 text-neutral-600 dark:text-neutral-300 hover:bg-neutral-100 dark:hover:bg-neutral-700 rounded-lg transition"
             title={t.fitScreen}
           >
             <Maximize2 className="w-4 h-4" />
@@ -332,38 +344,41 @@ export default function StudioCanvas({
         </div>
       </div>
 
-      {/* Split comparison slider bar if viewMode === "split" */}
-      {viewMode === "split" && (
-        <div className="absolute bottom-4 inset-x-12 z-20 pointer-events-auto bg-white/90 dark:bg-neutral-900/90 backdrop-blur-md px-4 py-2 rounded-xl shadow-lg border border-neutral-200 dark:border-neutral-800 flex items-center gap-3">
-          <Columns className="w-4 h-4 text-indigo-600" />
-          <span className="text-xs font-medium text-neutral-600 dark:text-neutral-300">
-            {t.viewSplit}
-          </span>
-          <input
-            type="range"
-            min="0"
-            max="100"
-            value={splitPos}
-            onChange={(e) => setSplitPos(parseInt(e.target.value, 10))}
-            className="w-full accent-indigo-600 h-1.5 bg-neutral-200 dark:bg-neutral-700 rounded cursor-pointer"
-          />
-        </div>
-      )}
-
-      {/* Central Canvas Container */}
+      {/* Central Canvas Viewport */}
       <div
         ref={containerRef}
         onMouseDown={handleMouseDown}
         onMouseMove={handleMouseMove}
         onMouseUp={handleMouseUp}
         onMouseLeave={handleMouseUp}
-        className="w-full h-[520px] sm:h-[620px] flex items-center justify-center cursor-grab active:cursor-grabbing overflow-hidden"
+        className="relative w-full h-[520px] sm:h-[620px] bg-neutral-100/70 dark:bg-neutral-950/70 flex items-center justify-center cursor-grab active:cursor-grabbing overflow-hidden"
       >
+        {/* Split comparison slider bar if viewMode === "split" */}
+        {viewMode === "split" && (
+          <div className="absolute bottom-4 inset-x-8 sm:inset-x-16 z-20 pointer-events-auto bg-white/95 dark:bg-neutral-900/95 backdrop-blur-md px-4 py-2.5 rounded-xl shadow-lg border border-neutral-200 dark:border-neutral-800 flex items-center gap-3">
+            <Columns className="w-4 h-4 text-indigo-600 shrink-0" />
+            <span className="text-xs font-bold text-neutral-700 dark:text-neutral-300 shrink-0">
+              {t.viewSplit}
+            </span>
+            <input
+              type="range"
+              min="0"
+              max="100"
+              value={splitPos}
+              onChange={(e) => setSplitPos(parseInt(e.target.value, 10))}
+              className="w-full accent-indigo-600 h-2 bg-neutral-200 dark:bg-neutral-700 rounded-lg cursor-pointer"
+            />
+            <span className="text-xs font-mono font-black text-indigo-600 dark:text-indigo-400 min-w-[36px] text-end">
+              {splitPos}%
+            </span>
+          </div>
+        )}
+
         <canvas
           ref={canvasRef}
-          width={700}
-          height={700}
-          className="max-w-full max-h-full drop-shadow-2xl"
+          width={800}
+          height={800}
+          className="max-w-full max-h-full drop-shadow-xl"
         />
       </div>
     </div>

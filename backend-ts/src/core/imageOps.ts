@@ -22,7 +22,7 @@ function createCircleMask(size: number): Buffer {
 export async function processInputImage(
   inputPath: string,
   options: ImageProcessOptions
-): Promise<{ rawGrayscale: Uint8Array; targetPngBuffer: Buffer }> {
+): Promise<{ rawGrayscale: Uint8Array; targetPngBuffer: Buffer; importance: Float32Array }> {
   const { size, cropBox, rotation = 0, brightness = 1.0, contrast = 1.0 } = options;
 
   let pipeline = sharp(inputPath);
@@ -54,8 +54,8 @@ export async function processInputImage(
     pipeline = pipeline.extract({ left, top, width, height });
   }
 
-  // 3. Resize to square size x size
-  pipeline = pipeline.resize(size, size, { fit: "cover" });
+  // 3. Resize to square size x size and sharpen high-frequency features
+  pipeline = pipeline.resize(size, size, { fit: "cover" }).sharpen({ sigma: 1.2 });
 
   // 4. Circular mask (make outside pure white)
   const circleMask = createCircleMask(size);
@@ -82,8 +82,78 @@ export async function processInputImage(
   // 7. Output raw 8-bit 1-channel pixel buffer
   const rawData = await pipeline.raw().toBuffer();
   const rawGrayscale = new Uint8Array(rawData.buffer, rawData.byteOffset, rawData.length);
+  const totalPixels = size * size;
 
-  return { rawGrayscale, targetPngBuffer };
+  // Auto-stretch contrast (Normalize) within circular mask so dark areas hit pure black rgb(0,0,0)
+  const center = (size - 1) / 2.0;
+  const radius = center - 2.0;
+  const radiusSq = radius * radius;
+  let minVal = 255;
+  let maxVal = 0;
+
+  for (let y = 0; y < size; y++) {
+    const dy = y - center;
+    const dySq = dy * dy;
+    const rowOffset = y * size;
+    for (let x = 0; x < size; x++) {
+      const dx = x - center;
+      if (dx * dx + dySq <= radiusSq) {
+        const val = rawGrayscale[rowOffset + x];
+        if (val < minVal) minVal = val;
+        if (val > maxVal) maxVal = val;
+      }
+    }
+  }
+
+  const range = maxVal - minVal;
+  if (range > 0 && (minVal > 0 || maxVal < 255)) {
+    for (let y = 0; y < size; y++) {
+      const dy = y - center;
+      const dySq = dy * dy;
+      const rowOffset = y * size;
+      for (let x = 0; x < size; x++) {
+        const idx = rowOffset + x;
+        const dx = x - center;
+        if (dx * dx + dySq <= radiusSq) {
+          const normalized = Math.round(((rawGrayscale[idx] - minVal) / range) * 255);
+          rawGrayscale[idx] = Math.max(0, Math.min(255, normalized));
+        } else {
+          rawGrayscale[idx] = 255;
+        }
+      }
+    }
+  }
+
+  // 3. Compute Soft Facial Importance Map (eyes, nose, mouth)
+  const importance = new Float32Array(totalPixels);
+  const faceCoreY = 0.48 * size;
+  const faceCoreX = center;
+  const rxSq = Math.pow(0.35 * size, 2);
+  const rySq = Math.pow(0.40 * size, 2);
+
+  for (let y = 0; y < size; y++) {
+    const dy = y - faceCoreY;
+    const dySq = dy * dy;
+    const rowOffset = y * size;
+    for (let x = 0; x < size; x++) {
+      const idx = rowOffset + x;
+      const dx = x - faceCoreX;
+      if (dx * dx + (y - center) * (y - center) > radiusSq) {
+        importance[idx] = 0.5;
+        continue;
+      }
+      const normDistSq = (dx * dx) / rxSq + dySq / rySq;
+      const faceWeight = Math.exp(-normDistSq * 1.5);
+      const darkness = (255.0 - rawGrayscale[idx]) / 255.0;
+      const featureBoost = darkness * 1.4;
+      importance[idx] = 1.0 + faceWeight * (0.4 + featureBoost);
+    }
+  }
+
+  // Generate target PNG from normalized pixels
+  const normalizedPngBuffer = await rawGrayscaleToPng(rawGrayscale, size);
+
+  return { rawGrayscale, targetPngBuffer: normalizedPngBuffer, importance };
 }
 
 export async function rawGrayscaleToPng(
