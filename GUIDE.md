@@ -1,24 +1,18 @@
 # دليل التشغيل والنشر | String Art Studio Guide
 
-هذا المشروع يوفر خيارات معمارية متعددة لتناسب كافة الاحتياجات:
-1. **الخيار الأول (الموصى به لـ Vercel)**: تشغيل التطبيق بالكامل بنسبة 100% على **Vercel** بنظام **All-in-One Engine** مدمج داخل `frontend` دون الحاجة إلى Render أو خوادم خارجية.
-2. **الخيار الثاني (الجديد: `backend-ts`)**: خادم منفصل كامل بلغة **TypeScript + Node.js (Express)** داخل مجلد `backend-ts`، فائق السرعة، ومزود بـ Dockerfile و Endpoints مطابقة 100%.
-3. **الخيار الثالث (الأصلي: `backend`)**: خادم بايثون الأصلي المحفوظ بالكامل (**Python FastAPI + Celery + Redis**) للعمليات الحسابية الثقيلة عبر Render أو محلياً.
+تم توحيد المشروع بالكامل بنظام **Unified Monorepo Architecture**:
+1. **النظام الموحد الفائق السرعة (Next.js All-in-One Engine)**: يعمل التطبيق بالكامل (الواجهات + المعالجة الحسابية + تصدير PDF/SVG/ZIP) داخل خادم موحد وسحابي على **Vercel** دون الحاجة لخوادم وسيطة أو خادم Express منفصل.
+2. **المكتبة الحسابية (`backend-ts`)**: أصبحت مكتبة برمجية TypeScript خالصة بدون خادم Express، يتم استيراد وظائفها وخوارزمياتها مباشرة.
+3. **الباك إند الأصلي لبايثون (`backend`)**: محفوظ بالكامل لمن يرغب بتشغيل خوادم Python منفصلة.
 
 ---
 
-## 🚀 الخيار الأول: نظام All-in-One (يعمل على Vercel بنقرة واحدة)
+## 🚀 النشر الرسمي الموحد على Vercel:
 
-تم بناء محرك حسابي متكامل بلغة **TypeScript / JavaScript** مدمج داخل Next.js (`frontend/lib/backend-js/` و `frontend/app/api/`):
-- يستخدم مصفوفات `Float32Array` و `Int32Array` فائقة السرعة لخوارزمية Bresenham.
-- يعالج الصور باستخدام مكتبة `sharp`.
-- يولد ملفات الـ PDF الفعلية 1:1 والـ A4 المقسمة عبر `pdf-lib`.
-- يجمع حزمة الـ ZIP عبر `jszip`.
+- 🌐 **الرابط المباشر العام**: [https://strings-art-studio.vercel.app](https://strings-art-studio.vercel.app)
+- 🌐 **النطاقات المرتبطة**: [https://strings-art.vercel.app](https://strings-art.vercel.app) & [https://art4strings.vercel.app](https://art4strings.vercel.app)
 
-### للتشغيل والنشر الفوري على Vercel:
-1. ادخل إلى **[Vercel.com](https://vercel.com)** واربط المستودع `strings_art`.
-2. حدد **Root Directory**: `frontend`.
-3. اضغط **Deploy** مباشرة **دون الحاجة لأي متغيرات بيئة أو خوادم خارجية**! ستظهر النقطة خضراء 🟢 ويعمل رفع الصور وتوليد اللوحات وتحميل الملفات فوراً.
+يتم النشر تلقائياً من المجلد الرئيسي للمشروع عبر Workspaces وبناء Next.js المحسّن بـ Turbopack.
 
 ---
 
