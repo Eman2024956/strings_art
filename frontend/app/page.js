@@ -33,7 +33,7 @@ import {
 
 export default function Home() {
   const [lang, setLang] = useState("ar");
-  const [theme, setTheme] = useState("dark");
+  const [theme, setTheme] = useState("light");
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   const t = translations[lang] || translations.en;
@@ -83,18 +83,17 @@ export default function Home() {
   const [currentStepIndex, setCurrentStepIndex] = useState(1);
   const [showNails, setShowNails] = useState(true);
 
-  // Load saved theme on mount
+  // Load theme on mount (defaulting to light mode on launch/reload)
   useEffect(() => {
     try {
       const savedTheme = localStorage.getItem("string_art_theme");
-      if (savedTheme === "light" || savedTheme === "dark") {
-        setTheme(savedTheme);
+      if (savedTheme === "dark") {
+        setTheme("dark");
       } else {
-        const prefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
-        setTheme(prefersDark ? "dark" : "light");
+        setTheme("light");
       }
     } catch {
-      // Ignore
+      setTheme("light");
     }
   }, []);
 

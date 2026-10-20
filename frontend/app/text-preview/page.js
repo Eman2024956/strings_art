@@ -29,7 +29,7 @@ import {
 
 export default function TextPreviewServicePage() {
   const [lang, setLang] = useState("ar");
-  const [theme, setTheme] = useState("dark");
+  const [theme, setTheme] = useState("light");
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   const t = translations[lang] || translations.en;
@@ -40,6 +40,20 @@ export default function TextPreviewServicePage() {
   const [currentStepIndex, setCurrentStepIndex] = useState(1);
   const [showNails, setShowNails] = useState(true);
   const [viewMode, setViewMode] = useState("string_art");
+
+  // Load theme on mount (defaulting to light mode)
+  useEffect(() => {
+    try {
+      const savedTheme = localStorage.getItem("string_art_theme");
+      if (savedTheme === "dark") {
+        setTheme("dark");
+      } else {
+        setTheme("light");
+      }
+    } catch {
+      setTheme("light");
+    }
+  }, []);
 
   // Sync theme
   useEffect(() => {

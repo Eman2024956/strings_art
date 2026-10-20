@@ -29,10 +29,9 @@ export default function RootLayout({ children }) {
             __html: `
               try {
                 const saved = localStorage.getItem('string_art_theme');
-                const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-                if (saved === 'dark' || (!saved && prefersDark)) {
+                if (saved === 'dark') {
                   document.documentElement.classList.add('dark');
-                } else if (saved === 'light') {
+                } else {
                   document.documentElement.classList.remove('dark');
                 }
               } catch (e) {}
