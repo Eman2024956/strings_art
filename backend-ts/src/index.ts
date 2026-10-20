@@ -55,23 +55,27 @@ app.use((err: unknown, _req: express.Request, res: express.Response, _next: expr
   res.status(500).json({ detail: (err as Error)?.message || "Internal server error" });
 });
 
-// Start listening
-const server = app.listen(PORT, HOST, () => {
-  console.log(`=======================================================`);
-  console.log(`🚀 String Art TypeScript Backend running on http://${HOST}:${PORT}`);
-  console.log(`   Health Check: http://localhost:${PORT}/health`);
-  console.log(`   API Base:     http://localhost:${PORT}/api/`);
-  console.log(`=======================================================`);
-});
-
-// Graceful shutdown
-const shutdown = () => {
-  console.log("Shutting down server...");
-  server.close(() => {
-    console.log("Server closed.");
-    process.exit(0);
+// Start listening (only in standalone Node environments, not in Vercel serverless)
+if (!process.env.VERCEL) {
+  const server = app.listen(PORT, HOST, () => {
+    console.log(`=======================================================`);
+    console.log(`🚀 String Art TypeScript Backend running on http://${HOST}:${PORT}`);
+    console.log(`   Health Check: http://localhost:${PORT}/health`);
+    console.log(`   API Base:     http://localhost:${PORT}/api/`);
+    console.log(`=======================================================`);
   });
-};
 
-process.on("SIGINT", shutdown);
-process.on("SIGTERM", shutdown);
+  // Graceful shutdown
+  const shutdown = () => {
+    console.log("Shutting down server...");
+    server.close(() => {
+      console.log("Server closed.");
+      process.exit(0);
+    });
+  };
+
+  process.on("SIGINT", shutdown);
+  process.on("SIGTERM", shutdown);
+}
+
+export default app;

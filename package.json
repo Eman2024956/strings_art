@@ -2,8 +2,15 @@
   "name": "strings-art",
   "version": "1.0.0",
   "private": true,
+  "workspaces": [
+    "frontend",
+    "backend-ts"
+  ],
   "scripts": {
-    "build": "cd frontend && npm install && npm run build",
-    "start": "cd frontend && npm start"
+    "build": "npm run build --workspace=frontend",
+    "start": "npm run start --workspace=frontend"
+  },
+  "dependencies": {
+    "next": "16.4.2"
   }
 }
